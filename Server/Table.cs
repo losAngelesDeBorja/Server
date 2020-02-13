@@ -27,7 +27,7 @@ namespace adm
         {
             newTable = new Table(tableName, numColumns);
         }
-        public void addAttribute(string name, TipoDato newTipo)
+        public void addAttribute(string name, DataType newTipo)
         {
         }
 
