@@ -43,8 +43,8 @@ namespace adm
         }
         //Create the table
 
-        TableColumn colName = new TableColumn(Name,DataType.Text); 
-        TableColumn colEmail= new TableColumn(“Email”,DataType.Email); 
+        TableColumn colName = new TableColumn("Name", DataType.Text); 
+        TableColumn colEmail= new TableColumn("Email",DataType.Email); 
         List<TableColumn> tableColumns = new List<TableColumn>(){colId, colName, colEmail};
 
         //Insert data
