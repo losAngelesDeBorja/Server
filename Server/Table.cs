@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Server;
+using System;
+using System.Collections.Generic;
+
 namespace adm
 {
     public class Table
@@ -33,19 +36,20 @@ namespace adm
 
 
         //Create some columns
-        // static bool craeteTable(string id) {
+        static bool createTable(string id) {
 
-        //TableColumn colId = new TableColumn(id, DataType.Int);
-        //}
+            //TableColumn colId = new TableColumn(id, DataType.Int);
+            return false;
+        }
         //Create the table
 
-        //TableColumn colName = new TableColumn(“Name”,DataType.Text); 
-        //TableColumn colEmail= new TableColumn(“Email”,DataType.Email); 
-        // List<TableColumn> tableColumns=  new List<TableColumn>(){colId, colName, colEmail};
+        TableColumn colName = new TableColumn(Name,DataType.Text); 
+        TableColumn colEmail= new TableColumn(“Email”,DataType.Email); 
+        List<TableColumn> tableColumns = new List<TableColumn>(){colId, colName, colEmail};
 
         //Insert data
 
-        //table.AddTuple(new List<string>(){“1”, “Maider”, “maider@hotmail.com”}; 
+        //Table.AddTuple(new List<string>(){“1”, “Maider”, “maider@hotmail.com”}; 
         //table.AddTuple(new List<string>(){“2”, “Adolfo”, “adolfo@gmail.com”}; 
 
         //Add the table to the database 
@@ -59,7 +63,7 @@ namespace adm
         static void Main(string[] args)
         {
 
-            nuevaTabla.createTable("miTabla", 2);
+            Table.createTable("miTabla", 2);
 
         }
 
