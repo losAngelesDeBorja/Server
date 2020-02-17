@@ -137,7 +137,18 @@ namespace adm
 
         static void Main()
         {
+            //creation of table into database test
+            Database newDB = new Database("miDB","user","user");
+            //The SQL senetence will arrive from client when the programming finnished.
+            // Until the SQL request is written into a text file (XML format?), it is introduced as string here: 
+            string sql = "CREATE TABLE Persons (PersonID int,LastName varchar(255),FirstName varchar(255),Address varchar(255),City varchar(255) );";
+            newDB.createDatabaseByText(sql); 
+
             
+
+
+
+
             // When file doesn't exist, create it
             if (!File.Exists("user_database.txt"))
             {
@@ -242,8 +253,14 @@ namespace adm
                 // End of transmission
                 client.Close();
                 listener.Stop();
+
+
+  
             }
+
+
         }
+    
     }
 }
 
