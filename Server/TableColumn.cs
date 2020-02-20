@@ -11,10 +11,10 @@ namespace Server
     {
         public TableColumn()
         {
-
         }
         public TableColumn(string nombreColumna, DataType tipoDato)
         {
+            TableColumn column = new TableColumn(nombreColumna, tipoDato);
         }
     }
 }
