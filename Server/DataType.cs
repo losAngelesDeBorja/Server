@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace adm
+namespace Server
 {
+    public enum DataType2 { INT, DOUBLE, TEXT};
 	public class DataType
 	{
 		public const string INTEGER = "INTEGER";
