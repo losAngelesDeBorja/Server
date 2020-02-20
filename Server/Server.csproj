@@ -43,9 +43,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SqlProcess.cs" />
-    <Compile Include="SqlToken.cs" />
-    <Compile Include="SqlTokenizer.cs" />
     <Compile Include="TableColumn.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

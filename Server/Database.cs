@@ -15,22 +15,7 @@ namespace adm
 			return CreateDatabaseSuccess;
 		}
 		public void createDatabaseByText(string sql) {
-			string testTableSql = sql;
-			string result;
-			DataType test = new DataType();
-			result = test.GetSqlKeyWord(testTableSql.ToCharArray(), 0);
-			Console.WriteLine("The type of SQL sentence is: ");
-			Console.WriteLine(result);
-
-			//Separate string of SQL in elements, by comma, key words, data types... (Tokens)
-			SqlTokenizer newSqlTokenizer = new SqlTokenizer();
-			Task<IList<SqlToken>>  lista = SqlTokenizer.TokenizeAsync(sql);
-			Console.WriteLine("The SQL introduced:");
-			Console.WriteLine(sql);
-			Console.WriteLine("has this number of Tokens: ");
-			Console.WriteLine(lista.Result.Count);
-			// TODO: create file if no exists for the table, parse the tokens data into XML and save into file
-
+			
 		}
 
 		// Query Output(string) Select First the selected columns, then the tuples: 
@@ -44,8 +29,6 @@ namespace adm
 		public const string OpenDatabaseSuccess = "Database opened";
 		public const string DeleteDatabaseSuccess = "Database deleted";
 		public const string BackupDatabaseSuccess = "Database backed up";
-
-
 		public const string SecurityProfileCreated = "Security profile created";
 		public const string SecurityUserCreated = "Security user created";
 		public const string SecurityProfileDeleted = "Security profile deleted";
