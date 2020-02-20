@@ -38,14 +38,14 @@ namespace adm
         //Create some columns
         static bool createTable(string id) {
 
-            //TableColumn colId = new TableColumn(id, DataType.Int);
+            //0TableColumn colId = new TableColumn(id, DataType.Int);
             return false;
         }
         //Create the table
 
-        TableColumn colName = new TableColumn(Name,DataType.Text); 
-        TableColumn colEmail= new TableColumn(“Email”,DataType.Email); 
-        List<TableColumn> tableColumns = new List<TableColumn>(){colId, colName, colEmail};
+        TableColumn colName = new TableColumn(nombre , DataType.varcharDBType); 
+        //TableColumn colEmail= new TableColumn(“Email”,DataType.Email); 
+        //List<TableColumn> tableColumns = new List<TableColumn>(){colId, colName, colEmail};
 
         //Insert data
 
