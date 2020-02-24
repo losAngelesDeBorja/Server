@@ -17,7 +17,7 @@ namespace Server
         public const string WrongSyntax = Error + "Syntactical error";
         public const string IncorrectDataType = Error + "Incorrect data type";
         public Table newTable;
-
+        List<TableColumn> ListTableCol = new List<TableColumn>(){};
 
         public Table()
         {
@@ -32,14 +32,7 @@ namespace Server
         }
         public void addAttribute(string name, DataType newTipo)
         {
-        }
-
-
-        //Create some columns
-        static bool createTable(string id) {
-
-            //TableColumn colId = new TableColumn(id, DataType.Int);
-            return false;
+            this.newTable.ListTableCol.Add(new TableColumn(name, newTipo));      
         }
         //Create the table
 
@@ -51,7 +44,7 @@ namespace Server
         }
         
         DataType asdf = new DataType();
-        TableColumn colName = new TableColumn("name", DataType2.TEXT); 
+        //TableColumn colName = new TableColumn("name", DataType2.TEXT); 
         //TableColumn colEmail= new TableColumn("Email",DataType.Email); 
         //List<TableColumn> tableColumns = new List<TableColumn>(){colId, colName, colEmail};
 
@@ -70,8 +63,8 @@ namespace Server
 
         static void Main(string[] args)
         {
-
-            Table.createTable("miTabla", 2);
+            Table myNewTable = new Table();
+            myNewTable.createTable("miTabla", 2);
 
         }
 
