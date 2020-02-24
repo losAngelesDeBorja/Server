@@ -1,7 +1,6 @@
 ﻿using Server;
 using System;
 using System.Collections.Generic;
-
 namespace Server
 {
     public class Table
@@ -26,9 +25,10 @@ namespace Server
         {
             Table newtable = new Table(tableName, numColumns);
         }
-        public void createTable(string tableName, int numColumns)
+        public string createTable(string tableName, int numColumns)
         {
             newTable = new Table(tableName, numColumns);
+            return CreateTableSuccess;
         }
         public void addAttribute(string name, DataType newTipo)
         {
@@ -61,12 +61,6 @@ namespace Server
 
         //Console.WriteLine(db.SelectAllTuples(“myTable”)); db.Close(); 
 
-        static void Main(string[] args)
-        {
-            Table myNewTable = new Table();
-            myNewTable.createTable("miTabla", 2);
-
-        }
 
     }
 
