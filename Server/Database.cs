@@ -33,14 +33,20 @@ namespace adm
 
 		}
 
-		// Query Output(string) Select First the selected columns, then the tuples: 
-		// [‘Id’,’Name’,’Email’]{‘1’,‘Maider’,’maider @hotmail.com’}{‘2’,’Adolfo’,’adolfo @gm ail.com’}
-		//
-		// If there are no tuples selected(empty), only the selected columns: 
-		// [‘Id’,’Name’,’Email’]
-		// Other queries
-		//Work with databases
-		public const string CreateDatabaseSuccess = "Database created";
+        public string deleteDatabase(string myDatabase, string username, string password)
+        {
+            return DeleteDatabaseSuccess;
+        }
+
+
+        // Query Output(string) Select First the selected columns, then the tuples: 
+        // [‘Id’,’Name’,’Email’]{‘1’,‘Maider’,’maider @hotmail.com’}{‘2’,’Adolfo’,’adolfo @gm ail.com’}
+        //
+        // If there are no tuples selected(empty), only the selected columns: 
+        // [‘Id’,’Name’,’Email’]
+        // Other queries
+        //Work with databases
+        public const string CreateDatabaseSuccess = "Database created";
 		public const string OpenDatabaseSuccess = "Database opened";
 		public const string DeleteDatabaseSuccess = "Database deleted";
 		public const string BackupDatabaseSuccess = "Database backed up";
