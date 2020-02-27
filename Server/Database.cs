@@ -25,7 +25,7 @@ namespace adm
 		public void createDatabaseByText(string sql) {
 			
 		}
-		public List<Table> SelectAllTuples(string dbname)
+		public List<Table> SelectAllTables(string dbname)
 		{
 			return this.ListTable;
 		}
@@ -97,31 +97,35 @@ namespace adm
 			//add Table to the Database
 			myDb.addTable(myNewTable, "db1");
 
+			//Print all tuples of tables of a database
+			foreach (Table t in myDb.SelectAllTables("db1"))
+				foreach (TableColumn s in t.getTuples())
+					Console.WriteLine(s);
 
-			//Console.WriteLine(myDb.SelectAllTuples("db1").ForEach(table as currentTable));
+
 			//myDb.Close();
 
-			//Insert data into table
-			//TODO
+					//Insert data into table
+					//TODO
 
-			//myNewTable.AddTuple(new List<string>(){“1”, “Maider”, “maider@hotmail.com”}; 
-			//myNewTable.AddTuple(new List<string>(){“2”, “Adolfo”, “adolfo@gmail.com”}; 
-
-
-
-
-			//Update data of table
-			//TODO
-
-			//Delete table
-			//TODO
+					//myNewTable.AddTuple(new List<string>(){“1”, “Maider”, “maider@hotmail.com”}; 
+					//myNewTable.AddTuple(new List<string>(){“2”, “Adolfo”, “adolfo@gmail.com”}; 
 
 
 
 
+					//Update data of table
+					//TODO
+
+					//Delete table
+					//TODO
 
 
-			Console.WriteLine(message);
+
+
+
+
+					Console.WriteLine(message);
 
 
 		}

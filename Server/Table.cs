@@ -40,11 +40,15 @@ namespace Server
         {
             
         }
-        
+        public List<TableColumn> getTuples()
+        {
+            return ListTableCol;
+        }
+
         //TableColumn colEmail= new TableColumn("Email",DataType.Email); 
         //List<TableColumn> tableColumns = new List<TableColumn>(){colId, colName, colEmail};
 
-        
+
 
         //Print all the tuples from the tables and close it 
 
