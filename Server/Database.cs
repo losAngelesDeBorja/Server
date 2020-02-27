@@ -72,13 +72,43 @@ namespace adm
 			dbNameUser = "user";
 			dbPassUser = "user";
 			adm.Database myDb = new adm.Database();
+			//Create database
 			message = myDb.createDatabase(dbName, dbNameUser, dbPassUser);
 			Console.WriteLine("Database response" + message);
 
 			//Create new Table
 			Table myNewTable = new Table();
 			//Add the table to the database 
-			message = myNewTable.createTable("miTabla", 2);
+			message = myNewTable.createTable("person", 2);
+			myNewTable.addAttribute("id", DataType.INT);
+			myNewTable.addAttribute("name", DataType.TEXT);
+			myNewTable.addAttribute("email", DataType.TEXT);
+
+
+			//add Table to the Database
+			//db.AddTable(table); 
+
+
+			//Insert data into table
+			//TODO
+
+			//myNewTable.AddTuple(new List<string>(){“1”, “Maider”, “maider@hotmail.com”}; 
+			//myNewTable.AddTuple(new List<string>(){“2”, “Adolfo”, “adolfo@gmail.com”}; 
+
+
+
+
+			//Update data of table
+			//TODO
+
+			//Delete table
+			//TODO
+
+
+
+
+
+
 			Console.WriteLine(message);
 
 

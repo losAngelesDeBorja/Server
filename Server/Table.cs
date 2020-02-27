@@ -25,6 +25,8 @@ namespace Server
         {
             Table newtable = new Table(tableName, numColumns);
         }
+
+        //Create the table
         public string createTable(string tableName, int numColumns)
         {
             newTable = new Table(tableName, numColumns);
@@ -34,28 +36,12 @@ namespace Server
         {
             this.newTable.ListTableCol.Add(new TableColumn(name, newTipo));      
         }
-        //Create the table
 
-            void EXAMPLE(DataType2 dataType)
-        {
-            if (dataType == DataType2.DOUBLE)
-                ;
-
-        }
         
-        DataType asdf = new DataType();
-        //TableColumn colName = new TableColumn("name", DataType2.TEXT); 
         //TableColumn colEmail= new TableColumn("Email",DataType.Email); 
         //List<TableColumn> tableColumns = new List<TableColumn>(){colId, colName, colEmail};
 
-        //Insert data
-
-        //Table.AddTuple(new List<string>(){“1”, “Maider”, “maider@hotmail.com”}; 
-        //table.AddTuple(new List<string>(){“2”, “Adolfo”, “adolfo@gmail.com”}; 
-
-        //Add the table to the database 
-
-        //db.AddTable(table); 
+        
 
         //Print all the tuples from the tables and close it 
 
