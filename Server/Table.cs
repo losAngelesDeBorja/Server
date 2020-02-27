@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace adm
+namespace Server
 {
     public class Table
     {
@@ -43,7 +43,15 @@ namespace adm
         }
         //Create the table
 
-        //TableColumn colName = new TableColumn("Name", DataType.Text); 
+            void EXAMPLE(DataType2 dataType)
+        {
+            if (dataType == DataType2.DOUBLE)
+                ;
+
+        }
+        
+        DataType asdf = new DataType();
+        TableColumn colName = new TableColumn("name", DataType2.TEXT); 
         //TableColumn colEmail= new TableColumn("Email",DataType.Email); 
         //List<TableColumn> tableColumns = new List<TableColumn>(){colId, colName, colEmail};
 
@@ -60,11 +68,12 @@ namespace adm
 
         //Console.WriteLine(db.SelectAllTuples(“myTable”)); db.Close(); 
 
-       // static void Main(string[] args)
-        //{
-         //   Table.createTable("miTabla", 2);
+        static void Main(string[] args)
+        {
 
-//        }
+            Table.createTable("miTabla", 2);
+
+        }
 
     }
 
