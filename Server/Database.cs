@@ -61,6 +61,11 @@ namespace adm
 			return AddedTableSuccess;
 		}
 
+		public string useDB(string nameDB)
+		{
+			//TODO
+			return "null";
+		}
 
 
 		static void Main(string[] args)
@@ -86,7 +91,7 @@ namespace adm
 
 
 			//add Table to the Database
-			//db.AddTable(table); 
+			myDb.addTable(myNewTable, "db1");
 
 
 			//Insert data into table

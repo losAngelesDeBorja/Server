@@ -36,7 +36,6 @@ namespace Server
         {
             this.newTable.ListTableCol.Add(new TableColumn(name, newTipo));      
         }
-
         
         //TableColumn colEmail= new TableColumn("Email",DataType.Email); 
         //List<TableColumn> tableColumns = new List<TableColumn>(){colId, colName, colEmail};
