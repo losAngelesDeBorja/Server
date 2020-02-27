@@ -36,6 +36,10 @@ namespace Server
         {
             this.newTable.ListTableCol.Add(new TableColumn(name, newTipo));      
         }
+        public void addTuple(List<DataType> tuple)
+        {
+            
+        }
         
         //TableColumn colEmail= new TableColumn("Email",DataType.Email); 
         //List<TableColumn> tableColumns = new List<TableColumn>(){colId, colName, colEmail};

@@ -25,6 +25,10 @@ namespace adm
 		public void createDatabaseByText(string sql) {
 			
 		}
+		public List<Table> SelectAllTuples(string dbname)
+		{
+			return this.ListTable;
+		}
 
 		// Query Output(string) Select First the selected columns, then the tuples: 
 		// [‘Id’,’Name’,’Email’]{‘1’,‘Maider’,’maider @hotmail.com’}{‘2’,’Adolfo’,’adolfo @gm ail.com’}
@@ -93,6 +97,9 @@ namespace adm
 			//add Table to the Database
 			myDb.addTable(myNewTable, "db1");
 
+
+			//Console.WriteLine(myDb.SelectAllTuples("db1").ForEach(table as currentTable));
+			//myDb.Close();
 
 			//Insert data into table
 			//TODO
