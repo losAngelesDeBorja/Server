@@ -1,21 +1,33 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Server;
+
 namespace adm
 {
 	public class Database
 	{
+		public Database db;
+		List<Table> ListTable = new List<Table>() { };
+
+		public Database()
+		{
+		}
 		public Database(string myDatabase, string username, string password)
 		{
 		}
 		//Create the database Database db= new Database(“myDatabase”, “username”, “password”);
 		public string createDatabase(string myDatabase, string username, string password)
 		{
-			Database db = new Database(myDatabase, username, password);
+		    db = new Database(myDatabase, username, password);
 			return CreateDatabaseSuccess;
 		}
 		public void createDatabaseByText(string sql) {
 			
+		}
+		public List<Table> SelectAllTables(string dbname)
+		{
+			return this.ListTable;
 		}
 
 		// Query Output(string) Select First the selected columns, then the tuples: 
@@ -26,6 +38,7 @@ namespace adm
 		// Other queries
 		//Work with databases
 		public const string CreateDatabaseSuccess = "Database created";
+		public const string AddedTableSuccess = "Table added";
 		public const string OpenDatabaseSuccess = "Database opened";
 		public const string DeleteDatabaseSuccess = "Database deleted";
 		public const string BackupDatabaseSuccess = "Database backed up";
@@ -46,11 +59,79 @@ namespace adm
 
 
 
+		public string addTable(Table newTable, string existingDbName)
+		{
+			db.ListTable.Add(newTable);
+			return AddedTableSuccess;
+		}
+
+		public string useDB(string nameDB)
+		{
+			//TODO
+			return "null";
+		}
+
+
+		static void Main(string[] args)
+		{
+			//create database
+			string dbName, dbNameUser, dbPassUser;
+			string message;
+			dbName = "db1";
+			dbNameUser = "user";
+			dbPassUser = "user";
+			adm.Database myDb = new adm.Database();
+			//Create database
+			message = myDb.createDatabase(dbName, dbNameUser, dbPassUser);
+			Console.WriteLine("Database response" + message);
+
+			//Create new Table
+			Table myNewTable = new Table();
+			//Add the table to the database 
+			message = myNewTable.createTable("person", 2);
+			myNewTable.addAttribute("id", DataType.INT);
+			myNewTable.addAttribute("name", DataType.TEXT);
+			myNewTable.addAttribute("email", DataType.TEXT);
+
+
+			//add Table to the Database
+			myDb.addTable(myNewTable, "db1");
+
+			//Print all tuples of tables of a database
+			foreach (Table t in myDb.SelectAllTables("db1"))
+				foreach (TableColumn s in t.getTuples())
+					Console.WriteLine(s);
+
+
+			//myDb.Close();
+
+					//Insert data into table
+					//TODO
+
+					//myNewTable.AddTuple(new List<string>(){“1”, “Maider”, “maider@hotmail.com”}; 
+					//myNewTable.AddTuple(new List<string>(){“2”, “Adolfo”, “adolfo@gmail.com”}; 
+
+
+
+
+					//Update data of table
+					//TODO
+
+					//Delete table
+					//TODO
 
 
 
 
 
-}
+
+					Console.WriteLine(message);
+
+
+		}
+
+
+
+	}
 	
 }
