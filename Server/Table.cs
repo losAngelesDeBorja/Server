@@ -45,9 +45,11 @@ namespace Server
         {
             return this.ListTableCol ;
         }
-
+        
+        DataType asdf = new DataType();
+        TableColumn colName = new TableColumn("name", DataType.TEXT); 
         //TableColumn colEmail= new TableColumn("Email",DataType.Email); 
-        //List<TableColumn> tableColumns = new List<TableColumn>(){colId, colName, colEmail};
+        List<TableColumn> tableColumns = new List<TableColumn>(){};
 
 
 

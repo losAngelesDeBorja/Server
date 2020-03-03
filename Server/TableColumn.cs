@@ -12,9 +12,9 @@ namespace Server
         public TableColumn()
         {
         }
-        public TableColumn(string nombreColumna, DataType tipoDato)
+        public TableColumn(string columnName, DataType dataType)
         {
-            TableColumn column = new TableColumn(nombreColumna, tipoDato);
+            TableColumn column = new TableColumn(columnName, dataType);
         }
     }
 }
