@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Server
 {
-    class TableColumn : Table
+    public class TableColumn : Table
     {
         public TableColumn()
         {

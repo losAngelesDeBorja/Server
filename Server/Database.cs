@@ -72,8 +72,9 @@ namespace adm
 		}
 
 
-		static void Main(string[] args)
+		private static void Main(string[] args)
 		{
+			Console.WriteLine("Starts the code execution");
 			//create database
 			string dbName, dbNameUser, dbPassUser;
 			string message;
@@ -99,7 +100,7 @@ namespace adm
 
 			//Print all tuples of tables of a database
 			foreach (Table t in myDb.SelectAllTables("db1"))
-				foreach (TableColumn s in t.getTuples())
+				foreach (TableColumn s in t.getAllTuples())
 					Console.WriteLine(s);
 
 
@@ -119,11 +120,6 @@ namespace adm
 
 					//Delete table
 					//TODO
-
-
-
-
-
 
 					Console.WriteLine(message);
 

@@ -16,7 +16,7 @@ namespace Server
         public const string WrongSyntax = Error + "Syntactical error";
         public const string IncorrectDataType = Error + "Incorrect data type";
         public Table newTable;
-        List<TableColumn> ListTableCol = new List<TableColumn>(){};
+        List<TableColumn> ListTableCol;
 
         public Table()
         {
@@ -24,6 +24,7 @@ namespace Server
         public Table(string tableName, int numColumns)
         {
             Table newtable = new Table(tableName, numColumns);
+            ListTableCol = new List<TableColumn>() { };
         }
 
         //Create the table
@@ -40,9 +41,9 @@ namespace Server
         {
             
         }
-        public List<TableColumn> getTuples()
+        public List<TableColumn> getAllTuples()
         {
-            return ListTableCol;
+            return this.ListTableCol ;
         }
 
         //TableColumn colEmail= new TableColumn("Email",DataType.Email); 
