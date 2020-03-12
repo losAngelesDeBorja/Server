@@ -1,12 +1,12 @@
-﻿using Server;
+﻿using adm;
 using System;
 using System.Collections.Generic;
-
-namespace Server
+namespace adm
 {
     public class Table
     {
         public const string CreateTableSuccess = "Table created";
+        public const string UpdateTableSuccess = "Table updated";
         public const string InsertSuccess = "Tuple added";
         public const string TupleDeleteSuccess = "Tuple(s) deleted";
         public const string TupleUpdateSuccess = "Tuple(s) updated";
@@ -17,63 +17,73 @@ namespace Server
         public const string WrongSyntax = Error + "Syntactical error";
         public const string IncorrectDataType = Error + "Incorrect data type";
         public Table newTable;
-
+        List<TableColumn> ListTableCol;     
 
         public Table()
         {
+            ListTableCol = new List<TableColumn>();
         }
-        public Table(string tableName, int numColumns)
+        public Table(string nameTable, int numColumns)
         {
-            Table newtable = new Table(tableName, numColumns);
+            ListTableCol = new List<TableColumn>();
         }
-        public void createTable(string tableName, int numColumns)
+
+        //Create the table
+        public string createTable(string tableName, int numColumns)
         {
             newTable = new Table(tableName, numColumns);
+            return CreateTableSuccess;
         }
-        public void addAttribute(string name, DataType newTipo)
+        public string updateTable(string tableName, string FieldName, DataType dataType, string existingValue, string newValue)
         {
+            try
+            {
+                //TODO load table from disk 
+                //TODO update table on Database object 
+                //TODO apply table changes into disk storage db file
+                return UpdateTableSuccess;
+            }
+            catch
+            {
+                return Error;
+            }
         }
-
-
-        //Create some columns
-        static bool createTable(string id) {
-
-            //TableColumn colId = new TableColumn(id, DataType.Int);
-            return false;
-        }
-        //Create the table
-
-            void EXAMPLE(DataType2 dataType)
+        public void addField(string name, DataType newTipo)
         {
-            if (dataType == DataType2.DOUBLE)
-                ;
-
+            this.newTable.ListTableCol.Add(new TableColumn(name, newTipo));      
         }
-        
-        DataType asdf = new DataType();
-        TableColumn colName = new TableColumn("name", DataType2.TEXT); 
+        public void addTuple()
+        {
+            //Insert data into table
+            //TODO
+        }
+        public List<TableColumn> getAllTuples()
+        {
+            return this.ListTableCol;
+        }
+        public void createTableByCommand(string sql)
+        {
+            //TODO Read sql sentence. Identify its CREATE word and create the table (use Parser)
+        }
+        public void updateTableByCommand(string sql)
+        {
+            //TODO Read sql sentence. Identify its UPDATE word and update the table (use Parser)
+        }
+        public void deleteTableByCommand(string sql)
+        {
+            //TODO Read sql sentence. Identify its DELETE word and update the table (use Parser)
+        }
+
+        //TableColumn colName = new TableColumn("name", DataType.TEXT); 
         //TableColumn colEmail= new TableColumn("Email",DataType.Email); 
-        //List<TableColumn> tableColumns = new List<TableColumn>(){colId, colName, colEmail};
 
-        //Insert data
+        //myNewTable.AddTuple(new List<string>(){“1”, “Maider”, “maider@hotmail.com”}; 
+        //myNewTable.AddTuple(new List<string>(){“2”, “Adolfo”, “adolfo@gmail.com”}; 
 
-        //Table.AddTuple(new List<string>(){“1”, “Maider”, “maider@hotmail.com”}; 
-        //table.AddTuple(new List<string>(){“2”, “Adolfo”, “adolfo@gmail.com”}; 
-
-        //Add the table to the database 
-
-        //db.AddTable(table); 
 
         //Print all the tuples from the tables and close it 
-
         //Console.WriteLine(db.SelectAllTuples(“myTable”)); db.Close(); 
 
-        static void Main(string[] args)
-        {
-
-            Table.createTable("miTabla", 2);
-
-        }
 
     }
 

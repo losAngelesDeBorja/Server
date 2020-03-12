@@ -5,16 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Server
+namespace adm
 {
-    class TableColumn : Table
+    public class TableColumn : Table
     {
         public TableColumn()
         {
         }
-        public TableColumn(string nombreColumna, DataType tipoDato)
+        public TableColumn(string columnName, DataType dataType)
         {
-            TableColumn column = new TableColumn(nombreColumna, tipoDato);
+            TableColumn column = new TableColumn(columnName, dataType);
         }
     }
 }

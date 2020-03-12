@@ -134,8 +134,8 @@ namespace adm
 
         static bool CreateNewDatabase(string dbInfo) { return false; }
         static bool DeleteNewDatabase(string dbInfo) { return false; }
-
-        static void Main()
+    
+       /*private static void Main()
         {
             //creation of table into database test
             Database newDB = new Database("miDB","user","user");
@@ -260,7 +260,7 @@ namespace adm
 
 
         }
-    
+    */
     }
 }
 
