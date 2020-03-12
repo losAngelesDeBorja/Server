@@ -1,44 +1,17 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Server;
+using adm;
 
 namespace adm
 {
 	public class Database
 	{
-		public Database db;
-		List<Table> ListTable = new List<Table>() { };
-
-		public Database()
-		{
-		}
-		public Database(string myDatabase, string username, string password)
-		{
-		}
-		//Create the database Database db= new Database(“myDatabase”, “username”, “password”);
-		public string createDatabase(string myDatabase, string username, string password)
-		{
-		    db = new Database(myDatabase, username, password);
-			return CreateDatabaseSuccess;
-		}
-		public void createDatabaseByText(string sql) {
-			
-		}
-		public List<Table> SelectAllTables(string dbname)
-		{
-			return this.ListTable;
-		}
-
-		// Query Output(string) Select First the selected columns, then the tuples: 
-		// [‘Id’,’Name’,’Email’]{‘1’,‘Maider’,’maider @hotmail.com’}{‘2’,’Adolfo’,’adolfo @gm ail.com’}
-		//
-		// If there are no tuples selected(empty), only the selected columns: 
-		// [‘Id’,’Name’,’Email’]
-		// Other queries
 		//Work with databases
+		public const string CreateDataBaseSuccess = "DataBase created";
+		public const string UpdateDataBaseSuccess = "DataBase updated";
+		public const string WrongSyntax = Error + "Syntactical error";
 		public const string CreateDatabaseSuccess = "Database created";
-		public const string AddedTableSuccess = "Table added";
 		public const string OpenDatabaseSuccess = "Database opened";
 		public const string DeleteDatabaseSuccess = "Database deleted";
 		public const string BackupDatabaseSuccess = "Database backed up";
@@ -49,20 +22,85 @@ namespace adm
 		public const string SecurityPrivilegeGranted = "Security privilege granted";
 		public const string SecurityPrivilegeRevoked = "Security privilege revoked";
 		public const string SecurityUserAdded = "User added to security profile";
-
 		public const string Error = "ERROR: ";
-
-		public const string WrongSyntax = Error + "Syntactical error";
 		public const string DatabaseDoesNotExist = Error + "Database does not exist";
-
 		public const string IncorrectDataType = Error + "Incorrect data type";
+		public const string AddedTableSuccess = "Table added successfully";
+		public Database db;
+		List<Table> ListTable = new List<Table>() { };
 
-
+		public Database()
+		{
+		}
+		public Database(string myDatabase, string username, string password)
+		{
+		}
+		public List<Table> SelectAllTables(string dbname)
+		{
+			return this.ListTable;
+		}
+		public string createDatabase(string myDatabase, string username, string password)
+		{
+			try
+			{
+				db = new Database(myDatabase, username, password);
+				//TODO save database into disk as TXT or XML file
+				return CreateDatabaseSuccess;
+			}
+			catch
+			{
+				return Error;
+			}
+		}
+		public string updateDatabase(string myDatabase, string username, string password)
+		{
+			
+			try {
+				//TODO load database from disk 
+				//TODO update database on Database object 
+				//TODO update apply database changes into disk storage
+				return UpdateDataBaseSuccess;
+			}
+			catch
+			{
+				return Error;
+			}
+		}
+		public string deleteDatabase(string myDatabase, string username, string password)
+		{
+			try
+			{
+				//TODO load database from disk 
+				return CreateDatabaseSuccess;
+			}
+			catch
+			{
+				return Error;
+			}
+		}
+		public void createDatabaseByCommand(string sql) {
+			//TODO Read sql sentence. Identify its CREATE word and create the database (use Parser)
+		}
+		public void updateDatabaseByCommand(string sql)
+		{
+			//TODO Read sql sentence. Identify its UPDATE word and update the database (use Parser)
+		}
+		public void deleteDatabaseByCommand(string sql)
+		{
+			//TODO Read sql sentence. Identify its DELETE word and update the database (use Parser)
+		}
 
 		public string addTable(Table newTable, string existingDbName)
 		{
-			db.ListTable.Add(newTable);
-			return AddedTableSuccess;
+			try
+			{
+				db.ListTable.Add(newTable);
+				return AddedTableSuccess;
+			}
+			catch
+			{
+				return Error;
+			}
 		}
 
 		public string useDB(string nameDB)
@@ -72,7 +110,7 @@ namespace adm
 		}
 
 
-		private static void Main(string[] args)
+		public static void Main(string[] args)
 		{
 			Console.WriteLine("Starts the code execution");
 			//create database
@@ -90,9 +128,9 @@ namespace adm
 			Table myNewTable = new Table();
 			//Add the table to the database 
 			message = myNewTable.createTable("person", 2);
-			myNewTable.addAttribute("id", DataType.INT);
-			myNewTable.addAttribute("name", DataType.TEXT);
-			myNewTable.addAttribute("email", DataType.TEXT);
+			myNewTable.addField("id", DataType.INT);
+			myNewTable.addField("name", DataType.TEXT);
+			myNewTable.addField("email", DataType.TEXT);
 
 
 			//add Table to the Database
@@ -100,28 +138,23 @@ namespace adm
 
 			//Print all tuples of tables of a database
 			foreach (Table t in myDb.SelectAllTables("db1"))
+			{
+				Console.WriteLine("Entra en bucle");
 				foreach (TableColumn s in t.getAllTuples())
+				{
 					Console.WriteLine(s);
+				}
+					
+			}
+
 
 
 			//myDb.Close();
 
-					//Insert data into table
-					//TODO
-
-					//myNewTable.AddTuple(new List<string>(){“1”, “Maider”, “maider@hotmail.com”}; 
-					//myNewTable.AddTuple(new List<string>(){“2”, “Adolfo”, “adolfo@gmail.com”}; 
+		
 
 
-
-
-					//Update data of table
-					//TODO
-
-					//Delete table
-					//TODO
-
-					Console.WriteLine(message);
+			Console.WriteLine(message);
 
 
 		}

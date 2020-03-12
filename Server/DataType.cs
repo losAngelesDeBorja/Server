@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Server
+namespace adm
 
 {
     public enum DataType { INT, DOUBLE, TEXT };
