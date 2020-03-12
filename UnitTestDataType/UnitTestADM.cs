@@ -1,0 +1,49 @@
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using adm;
+
+namespace UnitTestDataType
+{
+    [TestClass]
+    public class UnitTestADM
+    {
+        [TestMethod]
+        public void TestMethod1()
+        {
+			string dbName, dbNameUser, dbPassUser;
+			string message;
+			dbName = "db1";
+			dbNameUser = "user";
+			dbPassUser = "user";
+			adm.Database myDb = new adm.Database();
+			//Create database
+			message = myDb.createDatabase(dbName, dbNameUser, dbPassUser);
+			//Console.WriteLine("Database response" + message);
+
+			//Create new Table
+			Table myNewTable = new Table();
+			//Add the table to the database 
+			message = myNewTable.createTable("person", 2);
+			myNewTable.addField("id", DataType.INT);
+			myNewTable.addField("name", DataType.TEXT);
+			myNewTable.addField("email", DataType.TEXT);
+
+
+			//add Table to the Database
+			myDb.addTable(myNewTable, "db1");
+
+			//Print all tuples of tables of a database
+			foreach (Table t in myDb.SelectAllTables("db1"))
+			{
+			//	Console.WriteLine("Entra en bucle");
+				foreach (TableColumn s in t.getAllTuples())
+				{
+			//		Console.WriteLine(s);
+				}
+
+			}
+
+
+		}
+    }
+}
