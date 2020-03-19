@@ -1,0 +1,24 @@
+# TEST 1
+Table created (0.01s)
+Tuple added (0.02s)
+Tuple added (0.02s)
+Tuple added (0.02s)
+Tuple(s) deleted (0.01s)
+{'Name','Age'}{'Ramon','26'}{'Miren','26'} (0.04s)
+TOTAL TIME: 0.12s
+
+# TEST 2
+Table created (0.01s)
+Tuple added (0.02s)
+Tuple added (0.02s)
+Tuple added (0.02s)
+{'Name','Age'}{'Ramon','26'}{'Miren','26'} (0.04s)
+TOTAL TIME: 0.11s
+
+# TEST 3
+Table created (0.01s)
+ERROR: Table doesn't exist (0.02s)
+Tuple added (0.02s)
+Tuple added (0.02s)
+{'Name','Age'} (0.03s)
+TOTAL TIME: 0.10s
