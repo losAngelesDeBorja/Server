@@ -10,9 +10,8 @@ namespace adm
     {
         // Create a new user
         static bool MakeNewUser(string userInfo)
-        {//
+        {
             bool uniqueUsername = true;
-
             // Check if the bew user does not exists
             foreach (string curLine in File.ReadAllLines("user_database.txt"))
             {
@@ -26,7 +25,6 @@ namespace adm
             {
                 return false;
             }
-
             // If it's true and does not exists, add user to list in txt file
             File.AppendAllText("user_database.txt", userInfo + "\n");
             return true;
@@ -34,9 +32,8 @@ namespace adm
 
         // Create a new user
         static bool MakeNewDataBase(string dbInfo, string dbUser)
-        {//
+        {
             bool uniqueDataBasename = true;
-
             // Check if the bew user does not exists
             foreach (string curLine in File.ReadAllLines("name_database.txt"))
             {
@@ -50,7 +47,6 @@ namespace adm
             {
                 return false;
             }
-
             // If it's true and does not exists, add user to list in txt file
             File.AppendAllText("name_database.txt", dbInfo + "\n");
             return true;
@@ -61,25 +57,21 @@ namespace adm
         {
             bool validUsername = false;
             bool validPassword = false;
-
             // Reads line by line the file with user info
             foreach (string curLine in File.ReadAllLines("user_database.txt"))
             {
                 validPassword = false;
                 validUsername = false;
-
                 // When username is valid on current line validUsername = true
                 if (userInfo.Substring(0, userInfo.IndexOf("#.*;#")) == curLine.Substring(0, curLine.IndexOf("#.*;#")))
                 {
                     validUsername = true;
                 }
-
                 // When password is valid on current line validPassword = true
                 if (userInfo.Substring(userInfo.IndexOf("#.*;#"), userInfo.Length - userInfo.IndexOf("#.*;#")) == curLine.Substring(curLine.IndexOf("#.*;#"), curLine.Length - curLine.IndexOf("#.*;#")))
                 {
                     validPassword = true;
                 }
-
                 // When user and pass match with user introduced, stop checking
                 if (validPassword && validUsername)
                 {
@@ -94,30 +86,22 @@ namespace adm
             }
             // When successful login retrieves true
             return true;
-
-           
-
         }
-
 
         // Validation of user info
         static bool ValidateDBName(string dbNameInfo)
         {
             bool validDBname = false;
- 
-
             // Reads line by line the file with user info
             foreach (string curLine in File.ReadAllLines("name_database.txt"))
             {
                 validDBname = false;
-
                 // When name database is valid on current line validDBname = true
                 if (dbNameInfo.Substring(0, dbNameInfo.IndexOf("#.*;#")) == curLine.Substring(0, curLine.IndexOf("#.*;#")))
                 {
                     validDBname = true;
                 }
             }
-
             // When returns false, user/password were incorrect
             if (!validDBname)
             {
@@ -125,13 +109,7 @@ namespace adm
             }
             // When successful login retrieves true
             return true;
-
-
-
         }
-
-
-
         static bool CreateNewDatabase(string dbInfo) { return false; }
         static bool DeleteNewDatabase(string dbInfo) { return false; }
     
@@ -143,11 +121,6 @@ namespace adm
             // Until the SQL request is written into a text file (XML format?), it is introduced as string here: 
             string sql = "CREATE TABLE Persons (PersonID int,LastName varchar(255),FirstName varchar(255),Address varchar(255),City varchar(255) );";
             newDB.createDatabaseByText(sql); 
-
-            
-
-
-
 
             // When file doesn't exist, create it
             if (!File.Exists("user_database.txt"))
@@ -166,7 +139,6 @@ namespace adm
             // IP and PORT declarations.
             IPAddress localIP = IPAddress.Parse("127.0.0.1"); // Server IP here 127.0.0.1
             TcpListener listener = new TcpListener(IPAddress.Any, 1111); // Number of PORT 1111 here
-
             Console.WriteLine("Server engine started...");
 
             // Main
@@ -227,38 +199,27 @@ namespace adm
                 // Code for create new database
                 if (dataRecieved.Substring(dataRecieved.Length - 14, 14) == "createDataBase")
                 {
-         
                     Console.WriteLine("\nAn user tried to make a new database named: "+ dataRecieved.Substring(0, dataRecieved.IndexOf("#.*;#")));
                     if (MakeNewDataBase(dataRecieved.Substring(0, dataRecieved.Length - 19), dataRecieved.Substring(1, dataRecieved.IndexOf("#.*;#"))))
-                    { // New database process OK
+                    { 
+                        // New database process OK
                         Console.WriteLine("Success creatting new data base...");
-
                         buffer = ASCIIEncoding.ASCII.GetBytes("createdDataBase");
                         netStream.Write(buffer, 0, buffer.Length);
                     }
                     else
-                    { // New user process KO
+                    { 
+                        // New user process KO
                         Console.WriteLine("Failed creating new database...");
-
                         buffer = ASCIIEncoding.ASCII.GetBytes("False");
                         netStream.Write(buffer, 0, buffer.Length);
                     }
                  }
-
-
-
                 dataRecieved = "";
-
-
                 // End of transmission
                 client.Close();
                 listener.Stop();
-
-
-  
             }
-
-
         }
     */
     }

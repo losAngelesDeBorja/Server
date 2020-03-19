@@ -27,7 +27,6 @@ namespace adm
         {
             ListTableCol = new List<TableColumn>();
         }
-
         //Create the table
         public string createTable(string tableName, int numColumns)
         {
@@ -76,16 +75,10 @@ namespace adm
 
         //TableColumn colName = new TableColumn("name", DataType.TEXT); 
         //TableColumn colEmail= new TableColumn("Email",DataType.Email); 
-
         //myNewTable.AddTuple(new List<string>(){“1”, “Maider”, “maider@hotmail.com”}; 
         //myNewTable.AddTuple(new List<string>(){“2”, “Adolfo”, “adolfo@gmail.com”}; 
 
-
         //Print all the tuples from the tables and close it 
         //Console.WriteLine(db.SelectAllTuples(“myTable”)); db.Close(); 
-
-
     }
-
-
 }

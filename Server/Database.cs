@@ -89,7 +89,6 @@ namespace adm
 		{
 			//TODO Read sql sentence. Identify its DELETE word and update the database (use Parser)
 		}
-
 		public string addTable(Table newTable, string existingDbName)
 		{
 			try
@@ -102,14 +101,11 @@ namespace adm
 				return Error;
 			}
 		}
-
 		public string useDB(string nameDB)
 		{
 			//TODO
 			return "null";
 		}
-
-
 		public static void Main(string[] args)
 		{
 			Console.WriteLine("Starts the code execution");
@@ -123,7 +119,6 @@ namespace adm
 			//Create database
 			message = myDb.createDatabase(dbName, dbNameUser, dbPassUser);
 			Console.WriteLine("Database response" + message);
-
 			//Create new Table
 			Table myNewTable = new Table();
 			//Add the table to the database 
@@ -131,11 +126,8 @@ namespace adm
 			myNewTable.addField("id", DataType.INT);
 			myNewTable.addField("name", DataType.TEXT);
 			myNewTable.addField("email", DataType.TEXT);
-
-
 			//add Table to the Database
 			myDb.addTable(myNewTable, "db1");
-
 			//Print all tuples of tables of a database
 			foreach (Table t in myDb.SelectAllTables("db1"))
 			{
@@ -144,23 +136,9 @@ namespace adm
 				{
 					Console.WriteLine(s);
 				}
-					
 			}
-
-
-
 			//myDb.Close();
-
-		
-
-
 			Console.WriteLine(message);
-
-
 		}
-
-
-
 	}
-	
 }
