@@ -5,5 +5,5 @@ using System.Linq;
 namespace adm
 
 {
-    public enum DataType { INT, DOUBLE, TEXT };
+    public enum DataType { INT, DOUBLE, STRING };
 }

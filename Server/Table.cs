@@ -1,6 +1,7 @@
 ﻿using adm;
 using System;
 using System.Collections.Generic;
+using System.Data;
 namespace adm
 {
     public class Table
@@ -20,10 +21,9 @@ namespace adm
         public string tableName;
         public int numColumns;
         public List<TableColumn> listTableCol;
-
+        public  DataTable dataTableStorage;
         public Table() 
         {
-
             numColumns = 0;
             listTableCol = null;
             tableName = null;
@@ -33,14 +33,28 @@ namespace adm
         {
             numColumns = columnsNumber;
             listTableCol = new List<TableColumn>();
+            dataTableStorage = new DataTable();
             tableName = nameTable;
         }
         public Table(string nameTable, List<string> columnNames)
         {
             listTableCol = new List<TableColumn>();
+            dataTableStorage = new DataTable();
             columnNames.ForEach (x => listTableCol.Add(new TableColumn(x, new DataType())));
             numColumns = listTableCol.Count;
             tableName = nameTable;
+        }
+        public Table(string nameTable, int columnsNumber, List<string> columnNames, List<string> listType)
+        {
+            listTableCol = new List<TableColumn>();
+            dataTableStorage = new DataTable(nameTable);
+            foreach (string columnNamesTemp in columnNames) {
+                dataTableStorage.Columns.Add(new DataColumn(columnNamesTemp, typeof(string)));
+            }
+            Console.WriteLine("Database response: " + CreateTableSuccess);
+
+            //why is not working lambda expression??
+            //columnNames.ForEach((x, index) => dataTableStorage.Columns.Add(new DataColumn(columnNames[index],typeof(string));
         }
         //Create the table
         public string createTable(string nameTable, int columns)
@@ -48,6 +62,23 @@ namespace adm
             numColumns= columns;
             tableName = nameTable;
             return CreateTableSuccess;
+        }
+        //Insert to the table
+        public string addTupleToTable(List<string> columnDataValues)
+        {
+            try
+            {
+                if (listTableCol.Count > 0 && listTableCol.Count==columnDataValues.Count)
+                {
+                    
+                    dataTableStorage.Rows.Add(columnDataValues[0], columnDataValues[1], columnDataValues[2]);
+                }
+            }
+            catch 
+            {
+                return Error + InsertSuccess;
+            }
+            return InsertSuccess;
         }
         public string updateTable(string tableName, string FieldName, DataType dataType, string existingValue, string newValue)
         {

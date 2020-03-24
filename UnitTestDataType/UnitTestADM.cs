@@ -23,8 +23,8 @@ namespace UnitTestDataType
 			//Create new Table
 			Table myNewTable = new Table("person", 3);
 		    myNewTable.addField("id", DataType.INT);
-			myNewTable.addField("name", DataType.TEXT);
-			myNewTable.addField("email", DataType.TEXT);
+			myNewTable.addField("name", DataType.STRING);
+			myNewTable.addField("email", DataType.STRING);
 
 
 			//add Table to the Database

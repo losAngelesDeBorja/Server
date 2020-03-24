@@ -27,7 +27,7 @@ namespace adm
 		public const string IncorrectDataType = Error + "Incorrect data type";
 		public const string AddedTableSuccess = "Table added successfully";
 		public Database db;
-		List<Table> listTable = new List<Table>() { };
+		public List<Table> listTable = new List<Table>() { };
 
 		public Database()
 		{
@@ -89,16 +89,13 @@ namespace adm
 		{
 			//TODO Read sql sentence. Identify its DELETE word and update the database (use Parser)
 		}
-		public void executeSQLByCommand(string sql)
+		public void executeSQLByCommand(string sql,Table table)
 		{
 			//Select sql query
 			// SELECT (ID, NAME, EMAIL) FROM PERSON
 			ParserSQL parseSQLToTable = new ParserSQL();
-			Table selectToTable = parseSQLToTable.parserSentenceSQL(sql);
-			Console.WriteLine(selectToTable.listTableCol.Count);
-			selectToTable.listTableCol.ForEach(x => Console.WriteLine("Columna " + x.nameColumn));
-
-			listTable.ForEach(n=> { if (n.tableName.Equals(selectToTable.tableName)) { Console.WriteLine("Columna"+ selectToTable.tableName); } } );
+			Table selectToTable = parseSQLToTable.parserSentenceSQL(sql,table);
+			
 		}
 		public string addTable(Table newTable, string existingDbName)
 		{
@@ -130,28 +127,38 @@ namespace adm
 			adm.Database myDb = new adm.Database();
 			//Create database
 			message = myDb.createDatabase(dbName, dbNameUser, dbPassUser);
-			Console.WriteLine("Database response" + message);
+			Console.WriteLine("Database response: " + message);
+
 			//Create new Table
-			Table myNewTable = new Table("PERSON", 3); 
-			myNewTable.addField("ID", DataType.INT);
-			myNewTable.addField("NAME", DataType.TEXT);
-			myNewTable.addField("EMAIL", DataType.TEXT);
+			List<string> listType = new List<string>(){ DataType.INT.ToString(), DataType.STRING.ToString(), DataType.STRING.ToString() };
+			List<string> listNames = new List<string>() {"ID","NAME","EMAIL" };
+			Table newTable = new Table("PERSON", listNames.Count,listNames, listType);
+
+
+			newTable.addField("ID", DataType.INT);
+			newTable.addField("NAME", DataType.STRING);
+			newTable.addField("ADDRESS", DataType.STRING);
 			//add Table to the Database
-			myDb.addTable(myNewTable, "db1");
+			myDb.addTable(newTable, "db1");
 
-			myDb.executeSQLByCommand("SELECT ID, NAME, EMAIL FROM PERSON");
+			//Insert tuples
+			List<string> insertTupleList = new List<string>();
+			insertTupleList.Add("1");
+			insertTupleList.Add("JOHN");
+			insertTupleList.Add("j@doe.com");
+			newTable.addTupleToTable(insertTupleList);
 
-			//Print all tuples of tables of a database
-			foreach (Table t in myDb.SelectAllTables("db1"))
-			{
-				Console.WriteLine("Entra en bucle");
-				foreach (TableColumn s in t.getAllTuples())
-				{
-					Console.WriteLine(s);
-				}
-			}
-			//myDb.Close();
-			Console.WriteLine(message);
+			insertTupleList = new List<string>();
+			insertTupleList.Add("2");
+			insertTupleList.Add("Kathy");
+			insertTupleList.Add("k@lewis.com");
+			newTable.addTupleToTable(insertTupleList);
+
+
+
+			myDb.executeSQLByCommand("SELECT ID, NAME, EMAIL FROM PERSON", newTable);
+
+
 		}
 	}
 }
