@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="no_case.cs" />
+    <Compile Include="ParserSQL.cs" />
     <Compile Include="User.cs" />
     <Compile Include="TableColumn.cs" />
     <Compile Include="Database.cs" />

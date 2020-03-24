@@ -27,7 +27,7 @@ namespace adm
 		public const string IncorrectDataType = Error + "Incorrect data type";
 		public const string AddedTableSuccess = "Table added successfully";
 		public Database db;
-		List<Table> ListTable = new List<Table>() { };
+		List<Table> listTable = new List<Table>() { };
 
 		public Database()
 		{
@@ -37,7 +37,7 @@ namespace adm
 		}
 		public List<Table> SelectAllTables(string dbname)
 		{
-			return this.ListTable;
+			return listTable;
 		}
 		public string createDatabase(string myDatabase, string username, string password)
 		{
@@ -89,11 +89,22 @@ namespace adm
 		{
 			//TODO Read sql sentence. Identify its DELETE word and update the database (use Parser)
 		}
+		public void executeSQLByCommand(string sql)
+		{
+			//Select sql query
+			// SELECT (ID, NAME, EMAIL) FROM PERSON
+			ParserSQL parseSQLToTable = new ParserSQL();
+			Table selectToTable = parseSQLToTable.parserSentenceSQL(sql);
+			Console.WriteLine(selectToTable.listTableCol.Count);
+			selectToTable.listTableCol.ForEach(x => Console.WriteLine("Columna " + x.nameColumn));
+
+			listTable.ForEach(n=> { if (n.tableName.Equals(selectToTable.tableName)) { Console.WriteLine("Columna"+ selectToTable.tableName); } } );
+		}
 		public string addTable(Table newTable, string existingDbName)
 		{
 			try
 			{
-				db.ListTable.Add(newTable);
+				db.listTable.Add(newTable);
 				return AddedTableSuccess;
 			}
 			catch
@@ -108,6 +119,7 @@ namespace adm
 		}
 		public static void Main(string[] args)
 		{
+
 			Console.WriteLine("Starts the code execution");
 			//create database
 			string dbName, dbNameUser, dbPassUser;
@@ -120,14 +132,15 @@ namespace adm
 			message = myDb.createDatabase(dbName, dbNameUser, dbPassUser);
 			Console.WriteLine("Database response" + message);
 			//Create new Table
-			Table myNewTable = new Table();
-			//Add the table to the database 
-			message = myNewTable.createTable("person", 2);
-			myNewTable.addField("id", DataType.INT);
-			myNewTable.addField("name", DataType.TEXT);
-			myNewTable.addField("email", DataType.TEXT);
+			Table myNewTable = new Table("PERSON", 3); 
+			myNewTable.addField("ID", DataType.INT);
+			myNewTable.addField("NAME", DataType.TEXT);
+			myNewTable.addField("EMAIL", DataType.TEXT);
 			//add Table to the Database
 			myDb.addTable(myNewTable, "db1");
+
+			myDb.executeSQLByCommand("SELECT ID, NAME, EMAIL FROM PERSON");
+
 			//Print all tuples of tables of a database
 			foreach (Table t in myDb.SelectAllTables("db1"))
 			{

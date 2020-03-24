@@ -4,10 +4,12 @@ using System.Net;
 using System.Net.Sockets;
 using System.IO;
 
-namespace adm
+namespace Server
 {
     class Server
     {
+        //Parse sql
+
         // Create a new user
         static bool MakeNewUser(string userInfo)
         {

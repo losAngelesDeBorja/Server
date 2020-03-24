@@ -7,14 +7,22 @@ using System.Threading.Tasks;
 
 namespace adm
 {
-    public class TableColumn : Table
+    public class TableColumn
     {
-        public TableColumn()
-        {
-        }
+        public string nameColumn;
+        public DataType dataTypeColumn;
         public TableColumn(string columnName, DataType dataType)
         {
-            TableColumn column = new TableColumn(columnName, dataType);
+            nameColumn=columnName;
+            dataTypeColumn= dataType;
+        }
+        public string getName()
+        {
+            return nameColumn;
+        }
+        public DataType getValue()
+        {
+            return dataTypeColumn;
         }
     }
 }

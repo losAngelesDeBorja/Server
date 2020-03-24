@@ -17,20 +17,36 @@ namespace adm
         public const string WrongSyntax = Error + "Syntactical error";
         public const string IncorrectDataType = Error + "Incorrect data type";
         public Table newTable;
-        List<TableColumn> ListTableCol;     
+        public string tableName;
+        public int numColumns;
+        public List<TableColumn> listTableCol;
 
-        public Table()
+        public Table() 
         {
-            ListTableCol = new List<TableColumn>();
+
+            numColumns = 0;
+            listTableCol = null;
+            tableName = null;
         }
-        public Table(string nameTable, int numColumns)
+
+        public Table(string nameTable, int columnsNumber)
         {
-            ListTableCol = new List<TableColumn>();
+            numColumns = columnsNumber;
+            listTableCol = new List<TableColumn>();
+            tableName = nameTable;
+        }
+        public Table(string nameTable, List<string> columnNames)
+        {
+            listTableCol = new List<TableColumn>();
+            columnNames.ForEach (x => listTableCol.Add(new TableColumn(x, new DataType())));
+            numColumns = listTableCol.Count;
+            tableName = nameTable;
         }
         //Create the table
-        public string createTable(string tableName, int numColumns)
+        public string createTable(string nameTable, int columns)
         {
-            newTable = new Table(tableName, numColumns);
+            numColumns= columns;
+            tableName = nameTable;
             return CreateTableSuccess;
         }
         public string updateTable(string tableName, string FieldName, DataType dataType, string existingValue, string newValue)
@@ -49,8 +65,15 @@ namespace adm
         }
         public void addField(string name, DataType newTipo)
         {
-            this.newTable.ListTableCol.Add(new TableColumn(name, newTipo));      
+            try
+            {
+                listTableCol.Add(new TableColumn(name, newTipo));
+            }
+            catch
+            { 
+            }
         }
+
         public void addTuple()
         {
             //Insert data into table
@@ -58,7 +81,7 @@ namespace adm
         }
         public List<TableColumn> getAllTuples()
         {
-            return this.ListTableCol;
+            return listTableCol;
         }
         public void createTableByCommand(string sql)
         {
