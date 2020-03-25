@@ -40,8 +40,10 @@ namespace adm
 				if (match.Success)
 				{
 					Console.WriteLine(QueryStartedSuccess);
+                    DateTime t1 = DateTime.Now;
 
-					List<string> columnNames = CommaSeparatedNames(match.Groups[1].Value);
+
+                    List<string> columnNames = CommaSeparatedNames(match.Groups[1].Value);
 					string tableName = match.Groups[2].Value;
 					Table result = new Table(tableName, columnNames);
 					DataTable resultTable = table.dataTableStorage.Copy();
@@ -59,7 +61,12 @@ namespace adm
 						
 						Console.WriteLine(row[columnNames[0]] + "  " + row[columnNames[1]] + "  " + row[columnNames[2]]);
 					}
-					Console.WriteLine(QueryEndedSuccess);
+
+                    DateTime t2 = DateTime.Now;
+                    TimeSpan timeDiff = t2 - t1;
+                    Console.WriteLine(timeDiff);
+
+                    Console.WriteLine(QueryEndedSuccess);
 
 					return result;
 				}
