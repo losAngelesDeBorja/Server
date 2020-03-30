@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{7D0A0FFC-A37D-4141-9AC7-E53D60D43492}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestADM", "UnitTestDataType\UnitTestADM.csproj", "{DDD0F881-33B0-4B2B-B392-B3EB01BA0400}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestADM", "UnitTest\UnitTestADM.csproj", "{DDD0F881-33B0-4B2B-B392-B3EB01BA0400}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
