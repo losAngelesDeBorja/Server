@@ -130,14 +130,16 @@ namespace adm
 			Console.WriteLine("Database response: " + message);
 
 			//Create new Table
-			List<string> listType = new List<string>(){ DataType.INT.ToString(), DataType.STRING.ToString(), DataType.STRING.ToString() };
-			List<string> listNames = new List<string>() {"ID","NAME","EMAIL" };
+			List<string> listType = new List<string>(){ DataType.INT.ToString(), DataType.STRING.ToString(), DataType.INT.ToString(), DataType.STRING.ToString() };
+			List<string> listNames = new List<string>() {"ID","NAME","AGE", "ADDRESS" };
 			Table newTable = new Table("PERSON", listNames.Count,listNames, listType);
 
 
 			newTable.addField("ID", DataType.INT);
 			newTable.addField("NAME", DataType.STRING);
-			newTable.addField("EMAIL", DataType.STRING);
+			newTable.addField("AGE", DataType.INT);
+			newTable.addField("ADDRESS", DataType.STRING);
+
 			//add Table to the Database
 			myDb.addTable(newTable, "db1");
 
@@ -145,18 +147,20 @@ namespace adm
 			List<string> insertTupleList = new List<string>();
 			insertTupleList.Add("1");
 			insertTupleList.Add("JOHN");
-			insertTupleList.Add("j@doe.com");
+			insertTupleList.Add("19");
+			insertTupleList.Add("Street Name Street Example n 1");
 			newTable.addTupleToTable(insertTupleList);
 
 			insertTupleList = new List<string>();
 			insertTupleList.Add("2");
 			insertTupleList.Add("Kathy");
-			insertTupleList.Add("k@lewis.com");
+			insertTupleList.Add("91");
+			insertTupleList.Add("Street Name Street Example n 1");
 			newTable.addTupleToTable(insertTupleList);
 
 
 
-			myDb.executeSQLByCommand("SELECT ID,NAME,EMAIL FROM PERSON", newTable);
+			myDb.executeSQLByCommand("SELECT ID,NAME,AGE,ADDRESS FROM PERSON", newTable);
 
 
 		}

@@ -70,8 +70,7 @@ namespace adm
             {
                 if (listTableCol.Count > 0 && listTableCol.Count==columnDataValues.Count)
                 {
-                    
-                    dataTableStorage.Rows.Add(columnDataValues[0], columnDataValues[1], columnDataValues[2]);
+                    dataTableStorage.Rows.Add(columnDataValues.ToArray());
                 }
             }
             catch 
