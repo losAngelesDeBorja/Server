@@ -11,6 +11,7 @@ namespace adm
 	{
 		public const string QueryStartedSuccess = "Query Started Success";
 		public const string QueryEndedSuccess = "Query Ended Success";
+		public const string QueryEndedFailing = "Query Ended no Success";
 
 		public ParserSQL()
 		{
@@ -37,42 +38,69 @@ namespace adm
 			}
 			if (sentenceType == "SELECT")
 			{
-				if (match.Success)
-				{
-					Console.WriteLine(QueryStartedSuccess);
-                    DateTime t1 = DateTime.Now;
-
-
-                    List<string> columnNames = CommaSeparatedNames(match.Groups[1].Value);
-					string tableName = match.Groups[2].Value;
-					Table result = new Table(tableName, columnNames);
-					DataTable resultTable = table.dataTableStorage.Copy();
-
-					
-					Console.WriteLine("::TABLE::"+ resultTable.TableName);
-					foreach (DataColumn column in resultTable.Columns)
+					if (match.Success)
 					{
-						Console.Write(column.ColumnName);
-						Console.Write("  ");
-					}
-					Console.WriteLine();
-					foreach (DataRow row in resultTable.Rows)
-					{
+							Console.WriteLine(QueryStartedSuccess);
+							DateTime t1 = DateTime.Now;
+
+
+							List<string> columnNames = CommaSeparatedNames(match.Groups[1].Value);
+							string tableName = match.Groups[2].Value;
+							Table result = new Table(tableName, columnNames);
+							DataTable resultTable = table.dataTableStorage.Copy();
 						
-						Console.WriteLine(row[columnNames[0]] + "  " + row[columnNames[1]] + "  " + row[columnNames[2]]);
+							Console.WriteLine("::TABLE::" + resultTable.TableName);
+							//Control of order of the selected fields ehen printing the result of the SELECT
+							// SELECT EMAIL, NAME FROM PERSON =! SELECT NAME,EMAIL FROM PERSON
+							List<int> ordernation = new List<int>() { };
+							//Printing the data according to the ordenation
+
+							foreach (string columnName in columnNames)
+							{
+								//printing field headers name
+								for (int i=0; i < table.listTableCol.Count;i++)
+								{
+									if (columnName == table.listTableCol[i].nameColumn)
+									{
+										ordernation.Add(i);
+										Console.Write(columnName);
+										Console.Write("  ");
+									}
+								}	
+						    }
+							Console.WriteLine();
+							//Printing the data according to the ordenation
+							foreach (DataRow row in resultTable.Rows)
+							{
+								foreach (int pos in ordernation)
+								{
+									for (int i = 0; i < resultTable.Columns.Count; i++)
+									{
+										if (pos==i)
+										{
+											Console.Write(row[i]);
+											Console.Write("  ");
+										}
+									}
+								}
+								Console.WriteLine();
+
+							}
+
+					DateTime t2 = DateTime.Now;
+							TimeSpan timeDiff = t2 - t1;
+							Console.WriteLine(timeDiff);
+
+							Console.WriteLine(QueryEndedSuccess);
+							
+
+							return result;
 					}
-
-                    DateTime t2 = DateTime.Now;
-                    TimeSpan timeDiff = t2 - t1;
-                    Console.WriteLine(timeDiff);
-
-                    Console.WriteLine(QueryEndedSuccess);
-
-					return result;
-				}
-				else {
-					return new Table(null,null);
-				}
+					else
+					{
+						return new Table(null, null);
+					}
+				
 			}
 			else
 			{

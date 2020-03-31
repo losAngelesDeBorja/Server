@@ -137,7 +137,7 @@ namespace adm
 
 			newTable.addField("ID", DataType.INT);
 			newTable.addField("NAME", DataType.STRING);
-			newTable.addField("ADDRESS", DataType.STRING);
+			newTable.addField("EMAIL", DataType.STRING);
 			//add Table to the Database
 			myDb.addTable(newTable, "db1");
 
@@ -156,7 +156,7 @@ namespace adm
 
 
 
-			myDb.executeSQLByCommand("SELECT ID, NAME, EMAIL FROM PERSON", newTable);
+			myDb.executeSQLByCommand("SELECT ID,NAME,EMAIL FROM PERSON", newTable);
 
 
 		}
