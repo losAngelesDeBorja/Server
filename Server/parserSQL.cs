@@ -12,6 +12,7 @@ namespace adm
 		public const string QueryStartedSuccess = "Query Started Success";
 		public const string QueryEndedSuccess = "Query Ended Success";
 		public const string QueryEndedFailing = "Query Ended no Success";
+		public const string QueryEndedFailingBySyntax = "Wrong syntax of sentence";
 
 		public ParserSQL()
 		{
@@ -25,16 +26,18 @@ namespace adm
 			string[] detectedPattern;
 			string sentenceType="";
 			const string selectPattern = "SELECT ([\\w,\\s]+) FROM (\\w+)\\s*";
-			const string insertPattern = "";
-			Match match = Regex.Match(sqlToParse, selectPattern);
+			const string insertPattern = "(INSERT INTO\\s+)(\\w+)(\\s+\\()([\\w+,?\\s*]+)(\\)\\s+VALUES\\s+\\()(['?\\w+\\.?'?,?\\s*]+)(\\))";
+			Match match = Regex.Match(sqlToParse, "");
 			detectedPattern = sqlToParse.Split(' ');
 			if (detectedPattern[0].ToString().ToUpper() == "SELECT")
 			{
 				sentenceType = "SELECT";
+				 match = Regex.Match(sqlToParse, selectPattern);
 			}
 			else if (detectedPattern[0].ToString().ToUpper() == "INSERT")
 			{
 				sentenceType = "INSERT";
+				match = Regex.Match(sqlToParse, insertPattern);
 			}
 			if (sentenceType == "SELECT")
 			{
@@ -98,13 +101,47 @@ namespace adm
 					}
 					else
 					{
-						return new Table(null, null);
+						Console.WriteLine(QueryEndedFailingBySyntax);
+						return new Table();
 					}
 				
 			}
 			else
 			{
-				return new Table(null, null);
+				try
+				{
+					//INSERT CASE
+					if (match.Success)
+					{
+						Console.WriteLine("Content of the match: "+match.Groups[0].Value);
+						Console.WriteLine(match.Groups[1].Value);
+						Console.WriteLine(match.Groups[2].Value);
+						Console.WriteLine(match.Groups[3].Value);
+						Console.WriteLine(match.Groups[4].Value);
+						Console.WriteLine(match.Groups[5].Value);
+						Console.WriteLine(match.Groups[6].Value);
+						Console.WriteLine(match.Groups[7].Value);
+						Console.WriteLine(match.Groups[8].Value);
+						Console.WriteLine(match.Groups[9].Value);
+
+
+						//List<string> columnNames = CommaSeparatedNames(match.Groups[1].Value);
+						return table;
+					}
+					else
+					{			
+						Console.WriteLine(QueryEndedFailingBySyntax);
+						Console.WriteLine(match.Groups[0].Captures);
+						return new Table();
+					}
+				}
+				catch (ArgumentException e) {
+
+					Console.WriteLine(e.Message);
+				}
+
+				return new Table();
+
 			}
 		}
 		private List<string> CommaSeparatedNames(string value)
