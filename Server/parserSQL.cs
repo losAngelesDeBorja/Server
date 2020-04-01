@@ -13,7 +13,8 @@ namespace adm
 		public const string QueryEndedSuccess = "Query Ended Success";
 		public const string QueryEndedFailing = "Query Ended no Success";
 		public const string QueryEndedFailingBySyntax = "Wrong syntax of sentence";
-
+		public const string QuerySelect = ":::Query Select:::";
+		public const string QueryInsert = ":::Query Insert:::";
 		public ParserSQL()
 		{
 
@@ -26,7 +27,7 @@ namespace adm
 			string[] detectedPattern;
 			string sentenceType="";
 			const string selectPattern = "SELECT ([\\w,\\s]+) FROM (\\w+)\\s*";
-			const string insertPattern = "(INSERT INTO\\s+)(\\w+)(\\s+\\()([\\w+,?\\s*]+)(\\)\\s+VALUES\\s+\\()(['?\\w+\\.?'?,?\\s*]+)(\\))";
+			const string insertPattern = "(INSERT INTO\\s+)(\\w+)(\\s*\\()([\\w+,?\\s*]+)(\\)\\s+VALUES\\s*\\()(['?\\w+\\-\\.?'?,?\\s*]+)(\\))";
 			Match match = Regex.Match(sqlToParse, "");
 			detectedPattern = sqlToParse.Split(' ');
 			if (detectedPattern[0].ToString().ToUpper() == "SELECT")
@@ -39,13 +40,22 @@ namespace adm
 				sentenceType = "INSERT";
 				match = Regex.Match(sqlToParse, insertPattern);
 			}
+			else if (detectedPattern[0].ToString().ToUpper() == "CREATE")
+			{
+				sentenceType = "CREATE";
+				match = Regex.Match(sqlToParse, "");
+			}
+			else if (detectedPattern[0].ToString().ToUpper() == "DELETE")
+			{
+				sentenceType = "DELETE";
+				match = Regex.Match(sqlToParse, "");
+			}
 			if (sentenceType == "SELECT")
 			{
 					if (match.Success)
 					{
-							Console.WriteLine(QueryStartedSuccess);
-							DateTime t1 = DateTime.Now;
-
+							Console.WriteLine(QuerySelect);
+							DateTime t3 = DateTime.Now;
 
 							List<string> columnNames = CommaSeparatedNames(match.Groups[1].Value);
 							string tableName = match.Groups[2].Value;
@@ -53,7 +63,7 @@ namespace adm
 							DataTable resultTable = table.dataTableStorage.Copy();
 						
 							Console.WriteLine("::TABLE::" + resultTable.TableName);
-							//Control of order of the selected fields ehen printing the result of the SELECT
+							//Control of order of the selected fields when printing the result of the SELECT
 							// SELECT EMAIL, NAME FROM PERSON =! SELECT NAME,EMAIL FROM PERSON
 							List<int> ordernation = new List<int>() { };
 							//Printing the data according to the ordenation
@@ -90,14 +100,14 @@ namespace adm
 
 							}
 
-							DateTime t2 = DateTime.Now;
-							TimeSpan timeDiff = t2 - t1;
+							DateTime t4 = DateTime.Now;
+							TimeSpan timeDiff = t4 - t3;
+							Console.WriteLine();
 							Console.WriteLine(timeDiff);
-
 							Console.WriteLine(QueryEndedSuccess);
-							
+							Console.WriteLine();
 
-							return result;
+					return result;
 					}
 					else
 					{
@@ -113,30 +123,36 @@ namespace adm
 					//INSERT CASE
 					if (match.Success)
 					{
-						Console.WriteLine("Content of the match: "+match.Groups[0].Value);
-						Console.WriteLine(match.Groups[1].Value);
-						Console.WriteLine(match.Groups[2].Value);
-						Console.WriteLine(match.Groups[3].Value);
-						Console.WriteLine(match.Groups[4].Value);
-						Console.WriteLine(match.Groups[5].Value);
-						Console.WriteLine(match.Groups[6].Value);
-						Console.WriteLine(match.Groups[7].Value);
-						Console.WriteLine(match.Groups[8].Value);
-						Console.WriteLine(match.Groups[9].Value);
+						Console.WriteLine();
+						Console.WriteLine(QueryInsert);
+						DateTime t1 = DateTime.Now;
+						List<string> columnNames = CommaSeparatedNames(match.Groups[4].Value);
+						List<string> columnValues = CommaSeparatedNames(match.Groups[6].Value);
+						string tableName = match.Groups[2].Value;
+						Console.WriteLine("::TABLE::" + tableName);
 
+						List<string> insertTupleList = new List<string>();
 
-						//List<string> columnNames = CommaSeparatedNames(match.Groups[1].Value);
+						//Increasing index according to the existing number of rows
+						int increaseIndex= table.dataTableStorage.Rows.Count + 1;
+						columnValues.Insert(0, increaseIndex.ToString());
+						table.dataTableStorage.Rows.Add(columnValues.ToArray());
+
+						DateTime t2 = DateTime.Now;
+						TimeSpan timeDiff = t2 - t1;
+
+						Console.WriteLine(timeDiff);
+						Console.WriteLine(QueryEndedSuccess);
+						Console.WriteLine();
 						return table;
 					}
 					else
 					{			
-						Console.WriteLine(QueryEndedFailingBySyntax);
-						Console.WriteLine(match.Groups[0].Captures);
 						return new Table();
 					}
 				}
 				catch (ArgumentException e) {
-
+					Console.WriteLine(QueryEndedFailing);
 					Console.WriteLine(e.Message);
 				}
 

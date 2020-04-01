@@ -160,8 +160,16 @@ namespace adm
 
 
 
+			//myDb.executeSQLByCommand("SELECT ID,NAME,AGE,ADDRESS FROM PERSON;", newTable);
+
 			myDb.executeSQLByCommand("SELECT ID,NAME,AGE,ADDRESS FROM PERSON;", newTable);
-			//myDb.executeSQLByCommand("INSERT INTO MyTable (NAME, AGE, ADDRESS) VALUES ('Ramon',26,'Larratxo kalea 23 2. Ezk. 20012 Donostia');", newTable);
+			myDb.executeSQLByCommand("INSERT INTO MyTable (NAME, AGE, ADDRESS) VALUES('Eva', 18, 'Calle Los Herran 16 2 Derecha. 01005 Vitoria-Gasteiz')", newTable);
+			myDb.executeSQLByCommand("SELECT ID,NAME,AGE,ADDRESS FROM PERSON;", newTable);
+			myDb.executeSQLByCommand("INSERT INTO MyTable (NAME, AGE, ADDRESS) VALUES ('Ramon',26,'Larratxo kalea 23 2. Ezk. 20012 Donostia');", newTable);
+			myDb.executeSQLByCommand("SELECT ID,NAME,AGE,ADDRESS FROM PERSON;", newTable);
+			myDb.executeSQLByCommand("INSERT INTO MyTable(NAME, AGE, ADDRESS) VALUES('Miren', 26, 'Larratxo kalea 23 2. Ezk. 20012 Donostia');", newTable);
+			myDb.executeSQLByCommand("SELECT ID,NAME,AGE,ADDRESS FROM PERSON;", newTable);
+
 
 
 		}
