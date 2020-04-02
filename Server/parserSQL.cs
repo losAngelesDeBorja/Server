@@ -28,7 +28,8 @@ namespace adm
 			string sentenceType="";
 			const string selectPattern = "SELECT ([\\w,\\s]+) FROM (\\w+)\\s*";
 			const string insertPattern = "(INSERT INTO\\s+)(\\w+)(\\s*\\()([\\w+,?\\s*]+)(\\)\\s+VALUES\\s*\\()(['?\\w+\\-\\.?'?,?\\s*]+)(\\))";
-			Match match = Regex.Match(sqlToParse, "");
+            const string createTablePattern = "CREATE\\s+TABLE\\s+([\\w\\d]+)\\s*(\\(.*\\))\\s*;\\s*";
+            Match match = Regex.Match(sqlToParse, "");
 			detectedPattern = sqlToParse.Split(' ');
 			if (detectedPattern[0].ToString().ToUpper() == "SELECT")
 			{
@@ -43,7 +44,7 @@ namespace adm
 			else if (detectedPattern[0].ToString().ToUpper() == "CREATE")
 			{
 				sentenceType = "CREATE";
-				match = Regex.Match(sqlToParse, "");
+				match = Regex.Match(sqlToParse, createTablePattern);
 			}
 			else if (detectedPattern[0].ToString().ToUpper() == "DELETE")
 			{
