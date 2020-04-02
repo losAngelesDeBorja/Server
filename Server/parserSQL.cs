@@ -33,7 +33,7 @@ namespace adm
 			detectedPattern = sqlToParse.Split(' ');
 			if (detectedPattern[0].ToString().ToUpper() == "SELECT")
 			{
-				sentenceType = "SELECT";
+				 sentenceType = "SELECT";
 				 match = Regex.Match(sqlToParse, selectPattern);
 			}
 			else if (detectedPattern[0].ToString().ToUpper() == "INSERT")
@@ -50,6 +50,10 @@ namespace adm
 			{
 				sentenceType = "DELETE";
 				match = Regex.Match(sqlToParse, "");
+				Console.WriteLine();
+				Console.WriteLine("Sentence not allowed " + sentenceType);
+				Console.WriteLine();
+
 			}
 			if (sentenceType == "SELECT")
 			{
@@ -119,7 +123,8 @@ namespace adm
 			}
 			else
 			{
-				try
+				if (sentenceType == "INSERT") {
+					try
 				{
 					//INSERT CASE
 					if (match.Success)
@@ -149,15 +154,15 @@ namespace adm
 					}
 					else
 					{			
-						return new Table();
+						return table;
 					}
 				}
 				catch (ArgumentException e) {
 					Console.WriteLine(QueryEndedFailing);
 					Console.WriteLine(e.Message);
 				}
-
-				return new Table();
+				}
+				return table;
 
 			}
 		}

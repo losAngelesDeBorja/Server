@@ -170,6 +170,42 @@ namespace adm
 			myDb.executeSQLByCommand("INSERT INTO MyTable(NAME, AGE, ADDRESS) VALUES('Miren', 26, 'Larratxo kalea 23 2. Ezk. 20012 Donostia');", newTable);
 			myDb.executeSQLByCommand("SELECT ID,NAME,AGE,ADDRESS FROM PERSON;", newTable);
 
+/*
+			try{
+
+				int counter = 0;
+				string line;
+
+				// Read the file and display it line by line.  
+				System.IO.StreamReader file = new System.IO.StreamReader(@"input-file.txt");
+				System.Console.WriteLine();
+				System.Console.WriteLine("::::::::READING FROM FILE::::::::");
+				System.Console.WriteLine();
+				while ((line = file.ReadLine()) != null)
+				{
+
+					System.Console.WriteLine("Reading line "+counter+" from file: ");
+					System.Console.WriteLine(line);
+					myDb.executeSQLByCommand(line, newTable);
+					counter++;
+				}
+
+				file.Close();
+				System.Console.WriteLine("There were {0} lines.", counter);
+				// Suspend the screen.  
+				System.Console.ReadLine();
+
+			}
+			catch
+			{
+							
+
+			}
+
+*/
+
+
+
 
 
 		}
