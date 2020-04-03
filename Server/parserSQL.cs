@@ -28,7 +28,7 @@ namespace adm
 			string sentenceType="";
 			const string selectPattern = "SELECT ([\\w,\\s]+) FROM (\\w+)\\s*";
 			const string insertPattern = "(INSERT INTO\\s+)(\\w+)(\\s*\\()([\\w+,?\\s*]+)(\\)\\s+VALUES\\s*\\()(['?\\w+\\-\\.?'?,?\\s*]+)(\\))";
-            const string createTablePattern = "CREATE\\s+TABLE\\s+([\\w\\d]+)\\s*(\\(.*\\))\\s*;\\s*";
+            const string createTablePattern = "CREATE\\s+TABLE\\s+(\\w+)";
             Match match = Regex.Match(sqlToParse, "");
 			detectedPattern = sqlToParse.Split(' ');
 			if (detectedPattern[0].ToString().ToUpper() == "SELECT")
@@ -55,116 +55,133 @@ namespace adm
 				Console.WriteLine();
 
 			}
-			if (sentenceType == "SELECT")
-			{
-					if (match.Success)
-					{
-							Console.WriteLine(QuerySelect);
-							DateTime t3 = DateTime.Now;
+            if (sentenceType == "SELECT")
+            {
+                if (match.Success)
+                {
+                    Console.WriteLine(QuerySelect);
+                    DateTime t3 = DateTime.Now;
 
-							List<string> columnNames = CommaSeparatedNames(match.Groups[1].Value);
-							string tableName = match.Groups[2].Value;
-							Table result = new Table(tableName, columnNames);
-							DataTable resultTable = table.dataTableStorage.Copy();
-						
-							Console.WriteLine("::TABLE::" + resultTable.TableName);
-							//Control of order of the selected fields when printing the result of the SELECT
-							// SELECT EMAIL, NAME FROM PERSON =! SELECT NAME,EMAIL FROM PERSON
-							List<int> ordernation = new List<int>() { };
-							//Printing the data according to the ordenation
+                    List<string> columnNames = CommaSeparatedNames(match.Groups[1].Value);
+                    string tableName = match.Groups[2].Value;
+                    Table result = new Table(tableName, columnNames);
+                    DataTable resultTable = table.dataTableStorage.Copy();
 
-							foreach (string columnName in columnNames)
-							{
-								//printing field headers name
-								for (int i=0; i < table.listTableCol.Count;i++)
-								{
-									if (columnName == table.listTableCol[i].nameColumn)
-									{
-										ordernation.Add(i);
-										Console.Write(columnName);
-										Console.Write("  ");
-									}
-								}	
-						    }
-							Console.WriteLine();
-							//Printing the data according to the ordenation
-							foreach (DataRow row in resultTable.Rows)
-							{
-								foreach (int pos in ordernation)
-								{
-									for (int i = 0; i < resultTable.Columns.Count; i++)
-									{
-										if (pos==i)
-										{
-											Console.Write(row[i]);
-											Console.Write("  ");
-										}
-									}
-								}
-								Console.WriteLine();
+                    Console.WriteLine("::TABLE::" + resultTable.TableName);
+                    //Control of order of the selected fields when printing the result of the SELECT
+                    // SELECT EMAIL, NAME FROM PERSON =! SELECT NAME,EMAIL FROM PERSON
+                    List<int> ordernation = new List<int>() { };
+                    //Printing the data according to the ordenation
 
-							}
+                    foreach (string columnName in columnNames)
+                    {
+                        //printing field headers name
+                        for (int i = 0; i < table.listTableCol.Count; i++)
+                        {
+                            if (columnName == table.listTableCol[i].nameColumn)
+                            {
+                                ordernation.Add(i);
+                                Console.Write(columnName);
+                                Console.Write("  ");
+                            }
+                        }
+                    }
+                    Console.WriteLine();
+                    //Printing the data according to the ordenation
+                    foreach (DataRow row in resultTable.Rows)
+                    {
+                        foreach (int pos in ordernation)
+                        {
+                            for (int i = 0; i < resultTable.Columns.Count; i++)
+                            {
+                                if (pos == i)
+                                {
+                                    Console.Write(row[i]);
+                                    Console.Write("  ");
+                                }
+                            }
+                        }
+                        Console.WriteLine();
 
-							DateTime t4 = DateTime.Now;
-							TimeSpan timeDiff = t4 - t3;
-							Console.WriteLine();
-							Console.WriteLine(timeDiff);
-							Console.WriteLine(QueryEndedSuccess);
-							Console.WriteLine();
+                    }
 
-					return result;
-					}
-					else
-					{
-						Console.WriteLine(QueryEndedFailingBySyntax);
-						return new Table();
-					}
-				
-			}
-			else
-			{
-				if (sentenceType == "INSERT") {
-					try
-				{
-					//INSERT CASE
-					if (match.Success)
-					{
-						Console.WriteLine();
-						Console.WriteLine(QueryInsert);
-						DateTime t1 = DateTime.Now;
-						List<string> columnNames = CommaSeparatedNames(match.Groups[4].Value);
-						List<string> columnValues = CommaSeparatedNames(match.Groups[6].Value);
-						string tableName = match.Groups[2].Value;
-						Console.WriteLine("::TABLE::" + tableName);
+                    DateTime t4 = DateTime.Now;
+                    TimeSpan timeDiff = t4 - t3;
+                    Console.WriteLine();
+                    Console.WriteLine(timeDiff);
+                    Console.WriteLine(QueryEndedSuccess);
+                    Console.WriteLine();
 
-						List<string> insertTupleList = new List<string>();
+                    return result;
+                }
+                else
+                {
+                    Console.WriteLine(QueryEndedFailingBySyntax);
+                    return new Table();
+                }
 
-						//Increasing index according to the existing number of rows
-						int increaseIndex= table.dataTableStorage.Rows.Count + 1;
-						columnValues.Insert(0, increaseIndex.ToString());
-						table.dataTableStorage.Rows.Add(columnValues.ToArray());
+            }
+            else if (sentenceType == "INSERT")
+            {
+                try
+                {
+                    //INSERT CASE
+                    if (match.Success)
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine(QueryInsert);
+                        DateTime t1 = DateTime.Now;
+                        List<string> columnNames = CommaSeparatedNames(match.Groups[4].Value);
+                        List<string> columnValues = CommaSeparatedNames(match.Groups[6].Value);
+                        string tableName = match.Groups[2].Value;
+                        Console.WriteLine("::TABLE::" + tableName);
 
-						DateTime t2 = DateTime.Now;
-						TimeSpan timeDiff = t2 - t1;
+                        List<string> insertTupleList = new List<string>();
 
-						Console.WriteLine(timeDiff);
-						Console.WriteLine(QueryEndedSuccess);
-						Console.WriteLine();
-						return table;
-					}
-					else
-					{			
-						return table;
-					}
-				}
-				catch (ArgumentException e) {
-					Console.WriteLine(QueryEndedFailing);
-					Console.WriteLine(e.Message);
-				}
-				}
-				return table;
+                        //Increasing index according to the existing number of rows
+                        int increaseIndex = table.dataTableStorage.Rows.Count + 1;
+                        columnValues.Insert(0, increaseIndex.ToString());
+                        table.dataTableStorage.Rows.Add(columnValues.ToArray());
 
-			}
+                        DateTime t2 = DateTime.Now;
+                        TimeSpan timeDiff = t2 - t1;
+
+                        Console.WriteLine(timeDiff);
+                        Console.WriteLine(QueryEndedSuccess);
+                        Console.WriteLine();
+                        return table;
+                    }
+                    else
+                    {
+                        return table;
+                    }
+                }
+                catch (ArgumentException e)
+                {
+                    Console.WriteLine(QueryEndedFailing);
+                    Console.WriteLine(e.Message);
+                }
+
+                return table;
+            }
+            else
+            {
+                if (sentenceType == "CREATE TABLE")
+                {
+                    if (match.Success)
+                    {
+                        return table;
+                    }
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                }
+                return table;
+            }
 		}
 		private List<string> CommaSeparatedNames(string value)
 		{
