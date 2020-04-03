@@ -169,7 +169,7 @@ namespace adm
 			myDb.executeSQLByCommand("SELECT ID,NAME,AGE,ADDRESS FROM PERSON;", newTable);
 			myDb.executeSQLByCommand("INSERT INTO MyTable(NAME, AGE, ADDRESS) VALUES('Miren', 26, 'Larratxo kalea 23 2. Ezk. 20012 Donostia');", newTable);
 			myDb.executeSQLByCommand("SELECT ID,NAME,AGE,ADDRESS FROM PERSON;", newTable);
-            myDb.executeSQLByCommand("CREATE TABLE PROFESOR;", new Table());
+            myDb.executeSQLByCommand("DROP TABLE PERSON", newTable);
 
 
             /*

@@ -15,7 +15,8 @@ namespace adm
 		public const string QueryEndedFailingBySyntax = "Wrong syntax of sentence";
 		public const string QuerySelect = ":::Query Select:::";
 		public const string QueryInsert = ":::Query Insert:::";
-		public ParserSQL()
+        public const string QueryDrop = ":::Query Drop:::";
+        public ParserSQL()
 		{
 
 		}
@@ -29,6 +30,7 @@ namespace adm
 			const string selectPattern = "SELECT ([\\w,\\s]+) FROM (\\w+)\\s*";
 			const string insertPattern = "(INSERT INTO\\s+)(\\w+)(\\s*\\()([\\w+,?\\s*]+)(\\)\\s+VALUES\\s*\\()(['?\\w+\\-\\.?'?,?\\s*]+)(\\))";
             const string createTablePattern = "CREATE\\s+TABLE\\s+(\\w+)";
+            const string dropPattern = "DROP TABLE \\w+";
             Match match = Regex.Match(sqlToParse, "");
 			detectedPattern = sqlToParse.Split(' ');
 			if (detectedPattern[0].ToString().ToUpper() == "SELECT")
@@ -46,10 +48,10 @@ namespace adm
 				sentenceType = "CREATE";
 				match = Regex.Match(sqlToParse, createTablePattern);
 			}
-			else if (detectedPattern[0].ToString().ToUpper() == "DELETE")
+			else if (detectedPattern[0].ToString().ToUpper() == "DROP")
 			{
-				sentenceType = "DELETE";
-				match = Regex.Match(sqlToParse, "");
+				sentenceType = "DROP";
+				match = Regex.Match(sqlToParse, dropPattern);
 				Console.WriteLine();
 				Console.WriteLine("Sentence not allowed " + sentenceType);
 				Console.WriteLine();
@@ -166,19 +168,26 @@ namespace adm
             }
             else
             {
-                if (sentenceType == "CREATE TABLE")
+                if (sentenceType == "DROP")
                 {
-                    if (match.Success)
+                    try
                     {
-                        return table;
+                        if (match.Success)
+                        {
+                            Console.WriteLine(QueryDrop);
+                            DateTime t5 = DateTime.Now;
+                            List<string> columnNames = CommaSeparatedNames(match.Groups[0].Value);
+                            
+
+
+                            return table;
+                        }
                     }
-                    
-                    
-                    
-                    
-                    
-                    
-                    
+                    catch (ArgumentException e)
+                    {
+                        Console.WriteLine(QueryEndedFailing);
+                        Console.WriteLine(e.Message);
+                    }
                 }
                 return table;
             }
