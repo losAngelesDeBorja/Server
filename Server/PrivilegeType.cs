@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Server
+namespace adm
 {
     public enum PrivilegeType { DELETE, INSERT, SELECT, UPDATE };
     // d
