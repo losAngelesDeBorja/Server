@@ -46,6 +46,8 @@
   <ItemGroup>
     <Compile Include="no_case.cs" />
     <Compile Include="ParserSQL.cs" />
+    <Compile Include="PrivilegeType.cs" />
+    <Compile Include="Security.cs" />
     <Compile Include="User.cs" />
     <Compile Include="TableColumn.cs" />
     <Compile Include="Database.cs" />
