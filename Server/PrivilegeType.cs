@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace Server
 {
-    class PrivilegeType
-    {
-    }
+    public enum PrivilegeType { DELETE, INSERT, SELECT, UPDATE };
+    // d
 }
