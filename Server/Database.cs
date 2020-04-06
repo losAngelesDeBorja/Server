@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using adm;
+using System.Diagnostics;
+using System.IO;
 
 namespace adm
 {
@@ -26,6 +28,7 @@ namespace adm
 		public const string DatabaseDoesNotExist = Error + "Database does not exist";
 		public const string IncorrectDataType = Error + "Incorrect data type";
 		public const string AddedTableSuccess = "Table added successfully";
+		public const string FileOutputName = @"output-file.txt";
 		public Database db;
 		public List<Table> listTable = new List<Table>() { };
 
@@ -162,54 +165,71 @@ namespace adm
 
 			//myDb.executeSQLByCommand("SELECT ID,NAME,AGE,ADDRESS FROM PERSON;", newTable);
 
-			myDb.executeSQLByCommand("SELECT ID,NAME,AGE,ADDRESS FROM PERSON;", newTable);
-			myDb.executeSQLByCommand("INSERT INTO MyTable (NAME, AGE, ADDRESS) VALUES('Eva', 18, 'Calle Los Herran 16 2 Derecha. 01005 Vitoria-Gasteiz')", newTable);
-			myDb.executeSQLByCommand("SELECT ID,NAME,AGE,ADDRESS FROM PERSON;", newTable);
-			myDb.executeSQLByCommand("INSERT INTO MyTable (NAME, AGE, ADDRESS) VALUES ('Ramon',26,'Larratxo kalea 23 2. Ezk. 20012 Donostia');", newTable);
-			myDb.executeSQLByCommand("SELECT ID,NAME,AGE,ADDRESS FROM PERSON;", newTable);
-			myDb.executeSQLByCommand("INSERT INTO MyTable(NAME, AGE, ADDRESS) VALUES('Miren', 26, 'Larratxo kalea 23 2. Ezk. 20012 Donostia');", newTable);
-			myDb.executeSQLByCommand("SELECT ID,NAME,AGE,ADDRESS FROM PERSON;", newTable);
-            myDb.executeSQLByCommand("DROP TABLE PERSON", newTable);
+		
+            try{
+
+				//Creation of file 
+				string fileName = FileOutputName;
+				if (File.Exists(fileName))
+				   {
+						File.Delete(fileName);
+    				}
+				using (StreamWriter sw = File.CreateText(fileName))
+				{
+					sw.WriteLine("Created output file. "+DateTime.Now);
+					System.Console.WriteLine("::::::::CREATED TEXT FILE output::::::::");
+				}
 
 
-            /*
-                        try{
+				int counter = 0;
+				string line;
 
-                            int counter = 0;
-                            string line;
+				// Read the file and display it line by line.  
+				System.IO.StreamReader file = new System.IO.StreamReader(@"input-file.txt");
+                System.Console.WriteLine();
+                System.Console.WriteLine("::::::::READING FROM FILE::::::::");
+                System.Console.WriteLine();
+				
+				//Limitators of read lines
+				int counterReadLine = 0;
+				int counterLimitReadLine = 6;
+				//Limitator of time
+				var watch = Stopwatch.StartNew();
+				while (((line = file.ReadLine()) != null) && (counterReadLine < counterLimitReadLine))
+                {
+                    System.Console.WriteLine("Reading line "+counter+" from file: ");
+					//Executing sqls as Tasks 
+					using (var task = Task.Delay(1000))
+					{
+						myDb.executeSQLByCommand(line, newTable);
+						task.Wait();
+					}
+					watch.Stop();
 
-                            // Read the file and display it line by line.  
-                            System.IO.StreamReader file = new System.IO.StreamReader(@"input-file.txt");
-                            System.Console.WriteLine();
-                            System.Console.WriteLine("::::::::READING FROM FILE::::::::");
-                            System.Console.WriteLine();
-                            while ((line = file.ReadLine()) != null)
-                            {
+					System.Console.WriteLine();
+					counterReadLine++;
+					counter++;
 
-                                System.Console.WriteLine("Reading line "+counter+" from file: ");
-                                System.Console.WriteLine(line);
-                                myDb.executeSQLByCommand(line, newTable);
-                                counter++;
-                            }
+					watch.Start();
+                }
+				file.Close();
 
-                            file.Close();
-                            System.Console.WriteLine("There were {0} lines.", counter);
-                            // Suspend the screen.  
-                            System.Console.ReadLine();
-
-                        }
-                        catch
-                        {
+            }
+            catch
+            {
 
 
-                        }
-
-            */
+            }
+			//myDb.executeSQLByCommand("SELECT ID,NAME,AGE,ADDRESS FROM PERSON;", newTable);
+			//myDb.executeSQLByCommand("SELECT Name,Age FROM MyTable", newTable);
 
 
 
 
 
-        }
+
+
+
+		}
 	}
 }
