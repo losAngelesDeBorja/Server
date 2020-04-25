@@ -17,6 +17,7 @@ namespace adm
 		public const string QuerySelect = ":::Query Select:::";
 		public const string QueryInsert = ":::Query Insert:::";
         public const string QueryDrop = ":::Query Drop:::";
+        
         public ParserSQL()
 		{
 
