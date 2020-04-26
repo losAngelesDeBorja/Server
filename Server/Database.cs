@@ -125,12 +125,48 @@ namespace adm
 			string dbName, dbNameUser, dbPassUser;
 			string message;
 			dbName = "db1";
-			dbNameUser = "user";
-			dbPassUser = "user";
+			dbNameUser = "admin";
+			dbPassUser = "admin";
 			adm.Database myDb = new adm.Database();
 			//Create database
 			message = myDb.createDatabase(dbName, dbNameUser, dbPassUser);
-			Console.WriteLine("Database response: " + message);
+
+			//Security
+			Security security = new Security();
+			//Create security profile
+			security.createSecurityProfile("admin");
+			//Add user to security profile
+			security.addUser(dbNameUser, dbPassUser,"admin");
+			
+			//Request user and password
+			string userLogin = "";
+			string passwordLogin = "";
+			Boolean accessGranted = false;
+			Console.WriteLine("#######################");
+			Console.WriteLine("# Credentials request #");
+			Console.WriteLine("#######################");
+			while (accessGranted==false)
+			{
+				//Request user
+				Console.WriteLine("User:");
+				userLogin = Console.ReadLine();
+				//Request password
+				Console.WriteLine("Password:");
+				passwordLogin = Console.ReadLine();
+				//Check user and password
+				if (userLogin == dbNameUser && passwordLogin == dbPassUser)
+				{
+					accessGranted = true;
+					Console.WriteLine("Access granted");
+				}
+				else {
+					Console.WriteLine("Access denied");
+					userLogin ="";
+					passwordLogin="";
+				}
+
+			}
+
 
 			//Create new Table
 			List<string> listType = new List<string>(){ DataType.INT.ToString(), DataType.STRING.ToString(), DataType.INT.ToString(), DataType.STRING.ToString() };
