@@ -4,9 +4,9 @@ using System.Net;
 using System.Net.Sockets;
 using System.IO;
 
-namespace Server
+namespace admTestServer
 {
-    class Server
+    class ServerTest
     {
         //Parse sql
 

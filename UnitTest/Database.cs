@@ -20,7 +20,13 @@ namespace admTest
 		public const string BackupDatabaseSuccess = "Database backed up";
 		public const string SecurityProfileCreated = "Security profile created";
 		public const string SecurityUserCreated = "Security user created";
-		public const string SecurityProfileDeleted = "Security profile deleted";
+
+        internal void addTable(adm.Table myNewTable, string v)
+        {
+            throw new NotImplementedException();
+        }
+
+        public const string SecurityProfileDeleted = "Security profile deleted";
 		public const string SecurityUserDeleted = "Security user deleted";
 		public const string SecurityPrivilegeGranted = "Security privilege granted";
 		public const string SecurityPrivilegeRevoked = "Security privilege revoked";
@@ -125,10 +131,10 @@ namespace admTest
 
 		public void executeSQLByCommand(string sql, Table table)
 		{
-			//Select sql query
-			// SELECT (ID, NAME, EMAIL) FROM PERSON
-			ParserSQL parseSQLToTable = new ParserSQL();
-			Table selectToTable = parseSQLToTable.parserSentenceSQL(sql, table);
+            //Select sql query
+            // SELECT (ID, NAME, EMAIL) FROM PERSON
+            ParserSQL parseSQLToTable = new ParserSQL();
+            Table selectToTable = parseSQLToTable.parserSentenceSQL(sql, table);
 
 		}
 

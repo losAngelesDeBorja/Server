@@ -1,5 +1,4 @@
-﻿using Server;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -68,7 +67,7 @@ namespace adm
                 Console.WriteLine();
             }else if (detectedPattern[0].ToString().ToUpper() == "DELETE")
             {
-                sentenceType = "CREATE";
+                sentenceType = "DELETE";
                 match = Regex.Match(sqlToParse, deletePattern);
                 Console.WriteLine();
                 Console.WriteLine("Sentence not allowed " + sentenceType);
@@ -80,7 +79,7 @@ namespace adm
                 {
                     ////////////////OUTPUT-INIT
                     Console.WriteLine(QuerySelect);
-                    using (StreamWriter sw = File.AppendText(Database.FileOutputName))
+                    using (StreamWriter sw = File.AppendText(Server.FileOutputName))
                     {
                         sw.WriteLine(QuerySelect);
                     }
@@ -95,13 +94,12 @@ namespace adm
 
                     ////////////////OUTPUT-INIT
                     Console.WriteLine("::TABLE::" + resultTable.TableName);
-                    using (StreamWriter sw = File.AppendText(Database.FileOutputName))
+                    using (StreamWriter sw = File.AppendText(Server.FileOutputName))
                     {
                         sw.WriteLine("::TABLE::" + resultTable.TableName);
                     }
                     ////////////////OUTPUT-END
                     //Control of order of the selected fields when printing the result of the SELECT
-                    // SELECT EMAIL, NAME FROM PERSON =! SELECT NAME,EMAIL FROM PERSON
                     List<int> ordernation = new List<int>() { };
                     //Printing the data according to the ordenation
 
@@ -114,7 +112,7 @@ namespace adm
                             {
                                 ordernation.Add(i);
                                 ////////////////OUTPUT-INIT
-                                using (StreamWriter sw = File.AppendText(Database.FileOutputName))
+                                using (StreamWriter sw = File.AppendText(Server.FileOutputName))
                                 {
                                     sw.Write(columnName);
                                     sw.Write("  ");
@@ -127,7 +125,7 @@ namespace adm
                         }
                     }
                     ////////////////OUTPUT-INIT
-                    using (StreamWriter sw = File.AppendText(Database.FileOutputName))
+                    using (StreamWriter sw = File.AppendText(Server.FileOutputName))
                     {
                         sw.WriteLine();
                     }
@@ -144,7 +142,7 @@ namespace adm
                                 if (pos == i)
                                 {
                                     ////////////////OUTPUT-INIT
-                                    using (StreamWriter sw = File.AppendText(Database.FileOutputName))
+                                    using (StreamWriter sw = File.AppendText(Server.FileOutputName))
                                     {
                                         sw.Write(row[i]);
                                         sw.Write("  ");
@@ -157,7 +155,7 @@ namespace adm
                         }
 
                         ////////////////OUTPUT-INIT
-                        using (StreamWriter sw = File.AppendText(Database.FileOutputName))
+                        using (StreamWriter sw = File.AppendText(Server.FileOutputName))
                         {
                             sw.WriteLine();
                         }
@@ -170,7 +168,7 @@ namespace adm
                     DateTime t4 = DateTime.Now;
                     TimeSpan timeDiff = t4 - t3;
                     ////////////////OUTPUT-INIT
-                    using (StreamWriter sw = File.AppendText(Database.FileOutputName))
+                    using (StreamWriter sw = File.AppendText(Server.FileOutputName))
                     {
                         sw.WriteLine();
                         sw.WriteLine(timeDiff);
@@ -183,7 +181,9 @@ namespace adm
                     Console.WriteLine();
                     ////////////////OUTPUT-END
 
-
+                    //TO-DO  result.dataTableStorage should have only the FIELDS required of the SELECT SQL SENTENCE
+                    // modify => table.dataTableStorage
+                    result.dataTableStorage = resultTable;
                     return result;
                 }
                 else
@@ -201,7 +201,7 @@ namespace adm
                     if (match.Success)
                     {
                         ////////////////OUTPUT-INIT
-                        using (StreamWriter sw = File.AppendText(Database.FileOutputName))
+                        using (StreamWriter sw = File.AppendText(Server.FileOutputName))
                         {
                             sw.WriteLine();
                             sw.WriteLine(QueryInsert);
@@ -216,7 +216,7 @@ namespace adm
                         string tableName = match.Groups[2].Value;
 
                         ////////////////OUTPUT-INIT
-                        using (StreamWriter sw = File.AppendText(Database.FileOutputName))
+                        using (StreamWriter sw = File.AppendText(Server.FileOutputName))
                         {
                             sw.WriteLine("::TABLE::" + tableName);
                         }
@@ -234,7 +234,7 @@ namespace adm
                         TimeSpan timeDiff = t2 - t1;
 
                         ////////////////OUTPUT-INIT
-                        using (StreamWriter sw = File.AppendText(Database.FileOutputName))
+                        using (StreamWriter sw = File.AppendText(Server.FileOutputName))
                         {
                             sw.WriteLine(timeDiff);
                             sw.WriteLine(QueryEndedSuccess);
@@ -269,7 +269,7 @@ namespace adm
                     {
                         if (match.Success)
                         {
-                            using (StreamWriter sw = File.AppendText(Database.FileOutputName))
+                            using (StreamWriter sw = File.AppendText(Server.FileOutputName))
                             {
                                 sw.WriteLine(QueryDrop);
                             }

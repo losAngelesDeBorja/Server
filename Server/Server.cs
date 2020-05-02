@@ -3,12 +3,25 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
+using adm;
+using System.Collections.Generic;
+using System.Data;
+using System.Threading.Tasks;
+using System.Diagnostics;
 
-namespace Server
+namespace adm
 {
     class Server
     {
-        //Parse sql
+        public const string FileOutputName = @"output-file.txt";
+        public Database accessDB;
+        public Database dbExample;
+        public List<Database> dbList;
+        public Table tableAcesss;
+        public Table newTable;
+        public Server() {
+            dbList = new List<Database>();
+        }
 
         // Create a new user
         static bool MakeNewUser(string userInfo)
@@ -32,8 +45,35 @@ namespace Server
             return true;
         }
 
+        // Create a new db example
+        static bool MakeNewDataBase(string dbInfo, string dbUser, List<Database> l)
+        {
+            bool uniqueDataBasename = true;
+            Console.WriteLine("dbInfo: "+ dbInfo);
+            Console.WriteLine("dbUser: "+ dbUser);
+
+            foreach (Database d in l)
+            {
+                if (d.dbName == dbInfo)
+                {
+                    uniqueDataBasename = false;
+                }
+            }
+
+            // Check if the DB does not exists
+           
+            // When db name exists, returns false
+            if (!uniqueDataBasename)
+            {
+                return false;
+            }
+            // If it's true and does not exists, add db
+            
+            return true;
+        }
+
         // Create a new user
-        static bool MakeNewDataBase(string dbInfo, string dbUser)
+        static bool showAllTables(string dbInfo, string dbUser)
         {
             bool uniqueDataBasename = true;
             // Check if the bew user does not exists
@@ -53,6 +93,20 @@ namespace Server
             File.AppendAllText("name_database.txt", dbInfo + "\n");
             return true;
         }
+        //Show all databases
+        string showAllDatabases()
+        {
+            Console.WriteLine("showAllDatabases method ");
+            String databaseListNames = "#.*;#";
+            if (dbList.Count>0) {
+                foreach (Database db in dbList)
+                {
+                    databaseListNames = databaseListNames + db.dbName + "#.*;#";
+                }
+            }
+            return databaseListNames;
+        }
+
 
         // Validation of user info
         static bool ValidateUser(string userInfo)
@@ -114,34 +168,207 @@ namespace Server
         }
         static bool CreateNewDatabase(string dbInfo) { return false; }
         static bool DeleteNewDatabase(string dbInfo) { return false; }
-    
-       /*private static void Main()
+
+        public Database initializeDbEngine() {
+
+            Console.WriteLine("Starting...");
+
+            //Initilize the first database
+            string dbName, dbNameUser, dbPassUser;
+            string message;
+            dbName = "access";
+            dbNameUser = "admin";
+            dbPassUser = "admin";
+            accessDB = new Database();
+            //Create database
+            message = accessDB.createDatabase(dbName, dbNameUser, dbPassUser);
+
+            //Initilize the first Table
+            List<string> listType = new List<string>() { DataType.INT.ToString(), DataType.STRING.ToString(), DataType.INT.ToString(), DataType.STRING.ToString() };
+            List<string> listNames = new List<string>() { "ID", "USER", "PASS", "PRIVILEDGE" };
+            tableAcesss = new Table("ACCESS", listNames.Count, listNames, listType);
+
+            tableAcesss.addField("ID", DataType.INT);
+            tableAcesss.addField("USER", DataType.STRING);
+            tableAcesss.addField("PASS", DataType.INT);
+            tableAcesss.addField("PRIVILEDGE", DataType.STRING);
+            
+            //Insert tuples
+            List<string> insertTupleList = new List<string>();
+            insertTupleList.Add("1");
+            insertTupleList.Add("admin");
+            insertTupleList.Add("admin");
+            insertTupleList.Add("1");
+            tableAcesss.addTupleToTable(insertTupleList);
+            
+            //Add first Table to first DataBase
+            accessDB.addTable(tableAcesss,"ACCESS");
+
+            //Security
+            Security security = new Security();
+
+            //Create security profile
+            security.createSecurityProfile("admin");
+            
+            //Add user to security profile
+            security.addUser(dbNameUser, dbPassUser, "admin");
+
+            //Request user and password
+            string userLogin = "";
+            string passwordLogin = "";
+            Boolean accessGranted = false;
+            Console.WriteLine("#######################");
+            Console.WriteLine("# Credentials request #");
+            Console.WriteLine("#######################");
+            while (accessGranted == false)
+            {
+                //Request user
+                Console.WriteLine("User:");
+                userLogin = Console.ReadLine();
+                //Request password
+                Console.WriteLine("Password:");
+                passwordLogin = Security.GetHiddenConsoleInput();
+                
+
+                //Getting the Table of Users. In order to protect from SQL Injection the process of search USER NAME is here instead using WHERE clause
+                Table result=accessDB.executeSQLByCommandReturnResult("SELECT USER,PASS FROM ACCESS", tableAcesss);
+
+                for(int i=0; i< result.dataTableStorage.Rows.Count;i++)
+                {
+                    if ((result.dataTableStorage.Rows[i]["USER"].ToString() == userLogin)&&(result.dataTableStorage.Rows[i]["PASS"].ToString()== passwordLogin))
+                    {
+                        accessGranted = true;
+                        Console.WriteLine("Access granted");
+                        break;
+                    }
+                }
+            }
+            return accessDB;
+        }
+        public void initializeExampleDb()
         {
-            //creation of table into database test
-            Database newDB = new Database("miDB","user","user");
-            //The SQL senetence will arrive from client when the programming finnished.
-            // Until the SQL request is written into a text file (XML format?), it is introduced as string here: 
-            string sql = "CREATE TABLE Persons (PersonID int,LastName varchar(255),FirstName varchar(255),Address varchar(255),City varchar(255) );";
-            newDB.createDatabaseByText(sql); 
+            //SOME FAKE DATA INIT
+            string dbName, dbNameUser, dbPassUser;
+            string message;
+            dbName = "agenda";
+            dbNameUser = "user";
+            dbPassUser = "user";
+            dbExample = new Database(dbName, dbNameUser, dbPassUser);
 
-            // When file doesn't exist, create it
-            if (!File.Exists("user_database.txt"))
-            {
-                Console.WriteLine("File not found... Creating it...");
-                File.Create("user_database.txt");
-            }
+            Security security = new Security();
+            security.createSecurityProfile("ControlOfUsers");
+            security.addUser(dbNameUser, dbPassUser, PrivilegeType.INSERT.ToString());
 
-            // When file doesn't exist, create it
-            if (!File.Exists("name_database.txt"))
+            //Create database
+            message = dbExample.createDatabase(dbName, dbNameUser, dbPassUser);
+
+            //Create new Table
+            List<string> listType = new List<string>() { DataType.INT.ToString(), DataType.STRING.ToString(), DataType.INT.ToString(), DataType.STRING.ToString() };
+            List<string> listNames = new List<string>() { "ID", "NAME", "AGE", "ADDRESS" };
+            newTable = new Table("agenda", listNames.Count, listNames, listType);
+
+
+            newTable.addField("ID", DataType.INT);
+            newTable.addField("NAME", DataType.STRING);
+            newTable.addField("AGE", DataType.INT);
+            newTable.addField("ADDRESS", DataType.STRING);
+
+            //Add Table to the Database
+            dbExample.addTable(newTable, "db1");
+            dbList.Add(dbExample);
+
+            //Insert tuples
+            List<string> insertTupleList = new List<string>();
+            insertTupleList.Add("1");
+            insertTupleList.Add("JOHN");
+            insertTupleList.Add("19");
+            insertTupleList.Add("Street Name Street Example n 1");
+            newTable.addTupleToTable(insertTupleList);
+
+            insertTupleList = new List<string>();
+            insertTupleList.Add("2");
+            insertTupleList.Add("Kathy");
+            insertTupleList.Add("91");
+            insertTupleList.Add("Street Name Street Example n 1");
+            newTable.addTupleToTable(insertTupleList);
+            //SOME FAKE DATA END
+
+
+            
+        }
+
+        public void processTxtFile()
+        {
+            //INPUT-OUTPUT FILE INIT
+            try
             {
-                Console.WriteLine("File not found... Creating it...");
-                File.Create("name_database.txt");
+
+                //Creation of file 
+                string fileName = FileOutputName;
+                if (File.Exists(fileName))
+                {
+                    File.Delete(fileName);
+                }
+                using (StreamWriter sw = File.CreateText(fileName))
+                {
+                    sw.WriteLine("Created output file. " + DateTime.Now);
+                    System.Console.WriteLine("::::::::CREATED TEXT FILE output::::::::");
+                }
+
+
+                int counter = 0;
+                string line;
+
+                // Read the file and display it line by line.  
+                System.IO.StreamReader file = new System.IO.StreamReader(@"input-file.txt");
+                System.Console.WriteLine();
+                System.Console.WriteLine("::::::::READING FROM FILE::::::::");
+                System.Console.WriteLine();
+
+                //Limitators of read lines
+                int counterReadLine = 0;
+                int counterLimitReadLine = 6;
+                //Limitator of time
+                var watch = Stopwatch.StartNew();
+                while (((line = file.ReadLine()) != null) && (counterReadLine < counterLimitReadLine))
+                {
+                    System.Console.WriteLine("Reading line " + counter + " from file: ");
+                    //Executing sqls as Tasks 
+                    using (var task = Task.Delay(1000))
+                    {
+                        dbExample.executeSQLByCommand(line, newTable);
+                        task.Wait();
+                    }
+                    watch.Stop();
+
+                    System.Console.WriteLine();
+                    counterReadLine++;
+                    counter++;
+
+                    watch.Start();
+                }
+                file.Close();
+
             }
+            catch
+            {
+
+
+            }
+            //INPUT-OUTPUT FILE END
+
+
+
+        }
+        private static void Main()
+        {
+            Server server = new Server();
+            Database dbInit=server.initializeDbEngine();
 
             // IP and PORT declarations.
             IPAddress localIP = IPAddress.Parse("127.0.0.1"); // Server IP here 127.0.0.1
             TcpListener listener = new TcpListener(IPAddress.Any, 1111); // Number of PORT 1111 here
-            Console.WriteLine("Server engine started...");
+            Console.WriteLine("Server engine inizialized...");
 
             // Main
             while (true)
@@ -198,15 +425,22 @@ namespace Server
                     }
                 }
 
-                // Code for create new database
-                if (dataRecieved.Substring(dataRecieved.Length - 14, 14) == "createDataBase")
+                // Code to create new database
+                if (dataRecieved.Substring(dataRecieved.Length - 21, 21) == "createDataBaseExample")
                 {
-                    Console.WriteLine("\nAn user tried to make a new database named: "+ dataRecieved.Substring(0, dataRecieved.IndexOf("#.*;#")));
-                    if (MakeNewDataBase(dataRecieved.Substring(0, dataRecieved.Length - 19), dataRecieved.Substring(1, dataRecieved.IndexOf("#.*;#"))))
+                    String[] splitedDataRecieved = new String[3];
+                    string[] separator = new string[] { "#.*;#" };
+                    splitedDataRecieved = dataRecieved.Split(separator, StringSplitOptions.None);
+                    Console.WriteLine("\nAn user tries to make a new database named: "+ splitedDataRecieved[0]);
+                    string nameDb = splitedDataRecieved[0];
+                    string userDb = splitedDataRecieved[1];
+                  
+                    if (MakeNewDataBase(nameDb, userDb,server.dbList))
                     { 
                         // New database process OK
-                        Console.WriteLine("Success creatting new data base...");
-                        buffer = ASCIIEncoding.ASCII.GetBytes("createdDataBase");
+                        server.initializeExampleDb();
+                        Console.WriteLine("Success creating new data base...");
+                        buffer = ASCIIEncoding.ASCII.GetBytes("createdDataBase");   
                         netStream.Write(buffer, 0, buffer.Length);
                     }
                     else
@@ -217,13 +451,33 @@ namespace Server
                         netStream.Write(buffer, 0, buffer.Length);
                     }
                  }
+                // Code to show all database
+                if (dataRecieved.Substring(dataRecieved.Length - 13, 13) == "showDatabases")
+                {
+                    Console.WriteLine("\nAn user tried to get list of all databases: " + dataRecieved.Substring(0, dataRecieved.IndexOf("#.*;#")));
+                    //showAllDatabases().Split("#.*;#").Length>1   Regex.Matches(showAllDatabases(), "#.*;#", RegexOptions.IgnoreCase).Count
+                    if (true)
+                    {
+                        // show all databases process OK
+                        Console.WriteLine("Success getting all database...");
+                        buffer = ASCIIEncoding.ASCII.GetBytes("createdDataBase");
+                        netStream.Write(buffer, 0, buffer.Length);
+                    }
+                    else
+                    {
+                        // New user process KO
+                        Console.WriteLine("Failed getting all database...");
+                        buffer = ASCIIEncoding.ASCII.GetBytes("False");
+                        netStream.Write(buffer, 0, buffer.Length);
+                    }
+                }
                 dataRecieved = "";
                 // End of transmission
                 client.Close();
                 listener.Stop();
             }
         }
-    */
+    
     }
 }
 
