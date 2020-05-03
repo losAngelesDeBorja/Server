@@ -112,7 +112,7 @@ namespace adm
 		{
 			try
 			{
-				db.listTable.Add(newTable);
+				listTable.Add(newTable);
 				return AddedTableSuccess;
 			}
 			catch

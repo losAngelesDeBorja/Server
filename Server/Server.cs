@@ -109,34 +109,35 @@ namespace adm
 
 
         // Validation of user info
-        static bool ValidateUser(string userInfo)
+        static bool ValidateUser(string userInfo, Database dbAccess)
         {
             bool validUsername = false;
             bool validPassword = false;
-            // Reads line by line the file with user info
-            foreach (string curLine in File.ReadAllLines("user_database.txt"))
+            bool accessGranted = false;
+            String[] splitedUserInfo = new String[3];
+            string[] separator = new string[] { "#.*;#" };
+            splitedUserInfo = userInfo.Split(separator, StringSplitOptions.None);
+
+            Console.WriteLine("\nAn user tries to logging from Client with user name: " + splitedUserInfo[0]);
+            string nameUser = splitedUserInfo[0];
+            string passPass = splitedUserInfo[1];
+
+            // Reads line by line checking user info
+            for (int i = 0; i < dbAccess.listTable[0].dataTableStorage.Rows.Count; i++)
             {
-                validPassword = false;
-                validUsername = false;
-                // When username is valid on current line validUsername = true
-                if (userInfo.Substring(0, userInfo.IndexOf("#.*;#")) == curLine.Substring(0, curLine.IndexOf("#.*;#")))
+                if ((dbAccess.listTable[0].dataTableStorage.Rows[i]["USER"].ToString() == nameUser) && (dbAccess.listTable[0].dataTableStorage.Rows[i]["PASS"].ToString() == passPass))
                 {
-                    validUsername = true;
-                }
-                // When password is valid on current line validPassword = true
-                if (userInfo.Substring(userInfo.IndexOf("#.*;#"), userInfo.Length - userInfo.IndexOf("#.*;#")) == curLine.Substring(curLine.IndexOf("#.*;#"), curLine.Length - curLine.IndexOf("#.*;#")))
-                {
-                    validPassword = true;
-                }
-                // When user and pass match with user introduced, stop checking
-                if (validPassword && validUsername)
-                {
+                    accessGranted = true;
+                    Console.WriteLine("Access granted");
                     break;
                 }
             }
-
+            if (accessGranted == false)
+            {
+                Console.WriteLine("Access denied. The user"+ nameUser + " or password "+ passPass + " are incorrect. Please try again");
+            }
             // When returns false, user/password were incorrect
-            if (!validPassword || !validUsername)
+            if (!accessGranted)
             {
                 return false;
             }
@@ -242,7 +243,12 @@ namespace adm
                         break;
                     }
                 }
+                if (accessGranted == false)
+                {
+                    Console.WriteLine("Access denied. The user or password are incorrect. Please try again");
+                }
             }
+
             return accessDB;
         }
         public void initializeExampleDb()
@@ -362,6 +368,7 @@ namespace adm
         }
         private static void Main()
         {
+            Console.Clear();
             Server server = new Server();
             Database dbInit=server.initializeDbEngine();
 
@@ -369,6 +376,7 @@ namespace adm
             IPAddress localIP = IPAddress.Parse("127.0.0.1"); // Server IP here 127.0.0.1
             TcpListener listener = new TcpListener(IPAddress.Any, 1111); // Number of PORT 1111 here
             Console.WriteLine("Server engine inizialized...");
+            Console.WriteLine("Waiting for client communication...");
 
             // Main
             while (true)
@@ -409,7 +417,7 @@ namespace adm
                 if (dataRecieved.Substring(dataRecieved.Length - 5, 5) == "False")
                 {
                     Console.WriteLine("\nUser: {0}, tried to login...", dataRecieved.Substring(0, dataRecieved.IndexOf("#.*;#")));
-                    if (ValidateUser(dataRecieved.Substring(0, dataRecieved.Length - 10)))
+                    if (ValidateUser(dataRecieved.Substring(0, dataRecieved.Length - 10), dbInit))
                     { // Login ok
                         Console.WriteLine("Success...");
 
@@ -451,11 +459,34 @@ namespace adm
                         netStream.Write(buffer, 0, buffer.Length);
                     }
                  }
+
+                
+
+                // Code to process the TXT with SQL all databases
+                if (dataRecieved.Substring(dataRecieved.Length - 10, 10) == "processSQL")
+                {
+                    Console.WriteLine("\nAn user tried to process a TXT file with SQLs: " + dataRecieved.Substring(0, dataRecieved.IndexOf("#.*;#")));
+                    if (true)
+                    {
+                        server.processTxtFile();
+                        // show all databases process OK
+                        Console.WriteLine("Success processing TXT file...");
+                        buffer = ASCIIEncoding.ASCII.GetBytes("processSQLOK");
+                        netStream.Write(buffer, 0, buffer.Length);
+                    }
+                    else
+                    {
+                        // New user process KO
+                        Console.WriteLine("Failed getting all database...");
+                        buffer = ASCIIEncoding.ASCII.GetBytes("False");
+                        netStream.Write(buffer, 0, buffer.Length);
+                    }
+                }
+
                 // Code to show all database
                 if (dataRecieved.Substring(dataRecieved.Length - 13, 13) == "showDatabases")
                 {
                     Console.WriteLine("\nAn user tried to get list of all databases: " + dataRecieved.Substring(0, dataRecieved.IndexOf("#.*;#")));
-                    //showAllDatabases().Split("#.*;#").Length>1   Regex.Matches(showAllDatabases(), "#.*;#", RegexOptions.IgnoreCase).Count
                     if (true)
                     {
                         // show all databases process OK
