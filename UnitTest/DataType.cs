@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace adm
+namespace admTest
 
 {
     public enum DataType { INT, DOUBLE, STRING };

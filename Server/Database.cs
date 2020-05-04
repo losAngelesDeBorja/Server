@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using adm;
+using System.IO;
 
 namespace adm
 {
@@ -27,23 +27,26 @@ namespace adm
 		public const string IncorrectDataType = Error + "Incorrect data type";
 		public const string AddedTableSuccess = "Table added successfully";
 		public Database db;
-		List<Table> ListTable = new List<Table>() { };
+		public string dbName;
+		public List<Table> listTable = new List<Table>() { };
 
 		public Database()
 		{
 		}
-		public Database(string myDatabase, string username, string password)
+		public Database(string myDatabaseName, string username, string password)
 		{
+			dbName = myDatabaseName;
 		}
 		public List<Table> SelectAllTables(string dbname)
 		{
-			return this.ListTable;
+			return listTable;
 		}
 		public string createDatabase(string myDatabase, string username, string password)
 		{
 			try
 			{
 				db = new Database(myDatabase, username, password);
+
 				//TODO save database into disk as TXT or XML file
 				return CreateDatabaseSuccess;
 			}
@@ -54,8 +57,9 @@ namespace adm
 		}
 		public string updateDatabase(string myDatabase, string username, string password)
 		{
-			
-			try {
+
+			try
+			{
 				//TODO load database from disk 
 				//TODO update database on Database object 
 				//TODO update apply database changes into disk storage
@@ -78,7 +82,8 @@ namespace adm
 				return Error;
 			}
 		}
-		public void createDatabaseByCommand(string sql) {
+		public void createDatabaseByCommand(string sql)
+		{
 			//TODO Read sql sentence. Identify its CREATE word and create the database (use Parser)
 		}
 		public void updateDatabaseByCommand(string sql)
@@ -89,12 +94,25 @@ namespace adm
 		{
 			//TODO Read sql sentence. Identify its DELETE word and update the database (use Parser)
 		}
+		public void executeSQLByCommand(string sql, Table table)
+		{
+			//Select sql query
+			ParserSQL parseSQLToTable = new ParserSQL();
+			Table selectToTable = parseSQLToTable.parserSentenceSQL(sql, table);
 
+		}
+		public Table executeSQLByCommandReturnResult(string sql, Table table)
+		{
+			//Select sql query
+			ParserSQL parseSQLToTable = new ParserSQL();
+			Table resultToTable = parseSQLToTable.parserSentenceSQL(sql, table);
+			return resultToTable;
+		}
 		public string addTable(Table newTable, string existingDbName)
 		{
 			try
 			{
-				db.ListTable.Add(newTable);
+				listTable.Add(newTable);
 				return AddedTableSuccess;
 			}
 			catch
@@ -102,65 +120,11 @@ namespace adm
 				return Error;
 			}
 		}
-
 		public string useDB(string nameDB)
 		{
 			//TODO
 			return "null";
 		}
-
-
-		public static void Main(string[] args)
-		{
-			Console.WriteLine("Starts the code execution");
-			//create database
-			string dbName, dbNameUser, dbPassUser;
-			string message;
-			dbName = "db1";
-			dbNameUser = "user";
-			dbPassUser = "user";
-			adm.Database myDb = new adm.Database();
-			//Create database
-			message = myDb.createDatabase(dbName, dbNameUser, dbPassUser);
-			Console.WriteLine("Database response" + message);
-
-			//Create new Table
-			Table myNewTable = new Table();
-			//Add the table to the database 
-			message = myNewTable.createTable("person", 2);
-			myNewTable.addField("id", DataType.INT);
-			myNewTable.addField("name", DataType.TEXT);
-			myNewTable.addField("email", DataType.TEXT);
-
-
-			//add Table to the Database
-			myDb.addTable(myNewTable, "db1");
-
-			//Print all tuples of tables of a database
-			foreach (Table t in myDb.SelectAllTables("db1"))
-			{
-				Console.WriteLine("Entra en bucle");
-				foreach (TableColumn s in t.getAllTuples())
-				{
-					Console.WriteLine(s);
-				}
-					
-			}
-
-
-
-			//myDb.Close();
-
 		
-
-
-			Console.WriteLine(message);
-
-
-		}
-
-
-
 	}
-	
 }

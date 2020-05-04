@@ -15,18 +15,16 @@ namespace UnitTestDataType
 			dbName = "db1";
 			dbNameUser = "user";
 			dbPassUser = "user";
-			adm.Database myDb = new adm.Database();
+			Database myDb = new Database();
 			//Create database
 			message = myDb.createDatabase(dbName, dbNameUser, dbPassUser);
 			//Console.WriteLine("Database response" + message);
 
 			//Create new Table
-			Table myNewTable = new Table();
-			//Add the table to the database 
-			message = myNewTable.createTable("person", 2);
-			myNewTable.addField("id", DataType.INT);
-			myNewTable.addField("name", DataType.TEXT);
-			myNewTable.addField("email", DataType.TEXT);
+			Table myNewTable = new Table("person", 3);
+		    myNewTable.addField("id", DataType.INT);
+			myNewTable.addField("name", DataType.STRING);
+			myNewTable.addField("email", DataType.STRING);
 
 
 			//add Table to the Database

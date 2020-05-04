@@ -1,6 +1,7 @@
 ﻿using adm;
 using System;
 using System.Collections.Generic;
+using System.Data;
 namespace adm
 {
     public class Table
@@ -17,22 +18,66 @@ namespace adm
         public const string WrongSyntax = Error + "Syntactical error";
         public const string IncorrectDataType = Error + "Incorrect data type";
         public Table newTable;
-        List<TableColumn> ListTableCol;     
-
-        public Table()
+        public string tableName;
+        public int numColumns;
+        public List<TableColumn> listTableCol;
+        public  DataTable dataTableStorage;
+        public Table() 
         {
-            ListTableCol = new List<TableColumn>();
-        }
-        public Table(string nameTable, int numColumns)
-        {
-            ListTableCol = new List<TableColumn>();
+            numColumns = 0;
+            listTableCol = null;
+            tableName = null;
         }
 
+        public Table(string nameTable, int columnsNumber)
+        {
+            numColumns = columnsNumber;
+            listTableCol = new List<TableColumn>();
+            dataTableStorage = new DataTable();
+            tableName = nameTable;
+        }
+        public Table(string nameTable, List<string> columnNames)
+        {
+            listTableCol = new List<TableColumn>();
+            dataTableStorage = new DataTable();
+            columnNames.ForEach (x => listTableCol.Add(new TableColumn(x, new DataType())));
+            numColumns = listTableCol.Count;
+            tableName = nameTable;
+        }
+        public Table(string nameTable, int columnsNumber, List<string> columnNames, List<string> listType)
+        {
+            listTableCol = new List<TableColumn>();
+            dataTableStorage = new DataTable(nameTable);
+            foreach (string columnNamesTemp in columnNames) {
+                dataTableStorage.Columns.Add(new DataColumn(columnNamesTemp, typeof(string)));
+            }
+            Console.WriteLine("Database response: " + CreateTableSuccess);
+
+            //why is not working lambda expression??
+            //columnNames.ForEach((x, index) => dataTableStorage.Columns.Add(new DataColumn(columnNames[index],typeof(string));
+        }
         //Create the table
-        public string createTable(string tableName, int numColumns)
+        public string createTable(string nameTable, int columns)
         {
-            newTable = new Table(tableName, numColumns);
+            numColumns= columns;
+            tableName = nameTable;
             return CreateTableSuccess;
+        }
+        //Insert to the table
+        public string addTupleToTable(List<string> columnDataValues)
+        {
+            try
+            {
+                if (listTableCol.Count > 0 && listTableCol.Count==columnDataValues.Count)
+                {
+                    dataTableStorage.Rows.Add(columnDataValues.ToArray());
+                }
+            }
+            catch 
+            {
+                return Error + InsertSuccess;
+            }
+            return InsertSuccess;
         }
         public string updateTable(string tableName, string FieldName, DataType dataType, string existingValue, string newValue)
         {
@@ -50,8 +95,15 @@ namespace adm
         }
         public void addField(string name, DataType newTipo)
         {
-            this.newTable.ListTableCol.Add(new TableColumn(name, newTipo));      
+            try
+            {
+                listTableCol.Add(new TableColumn(name, newTipo));
+            }
+            catch
+            { 
+            }
         }
+
         public void addTuple()
         {
             //Insert data into table
@@ -59,7 +111,7 @@ namespace adm
         }
         public List<TableColumn> getAllTuples()
         {
-            return this.ListTableCol;
+            return listTableCol;
         }
         public void createTableByCommand(string sql)
         {
@@ -76,16 +128,10 @@ namespace adm
 
         //TableColumn colName = new TableColumn("name", DataType.TEXT); 
         //TableColumn colEmail= new TableColumn("Email",DataType.Email); 
-
         //myNewTable.AddTuple(new List<string>(){“1”, “Maider”, “maider@hotmail.com”}; 
         //myNewTable.AddTuple(new List<string>(){“2”, “Adolfo”, “adolfo@gmail.com”}; 
 
-
         //Print all the tuples from the tables and close it 
         //Console.WriteLine(db.SelectAllTuples(“myTable”)); db.Close(); 
-
-
     }
-
-
 }
