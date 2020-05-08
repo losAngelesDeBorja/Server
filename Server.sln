@@ -7,7 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestADM", "UnitTest\UnitTestADM.csproj", "{DDD0F881-33B0-4B2B-B392-B3EB01BA0400}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "..\Client\Client\Client.csproj", "{8AFA4333-13A3-4307-AF82-C7B2FB5F7088}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bundler", "Bundler\Bundler.csproj", "{A8B514AC-1F4C-449A-853D-79A61330B145}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "installers", "installers", "{C399D0F3-BAD4-4B56-809C-0196123EAA58}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,13 +25,16 @@ Global
 		{DDD0F881-33B0-4B2B-B392-B3EB01BA0400}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDD0F881-33B0-4B2B-B392-B3EB01BA0400}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDD0F881-33B0-4B2B-B392-B3EB01BA0400}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8AFA4333-13A3-4307-AF82-C7B2FB5F7088}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8AFA4333-13A3-4307-AF82-C7B2FB5F7088}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8AFA4333-13A3-4307-AF82-C7B2FB5F7088}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8AFA4333-13A3-4307-AF82-C7B2FB5F7088}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8B514AC-1F4C-449A-853D-79A61330B145}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8B514AC-1F4C-449A-853D-79A61330B145}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8B514AC-1F4C-449A-853D-79A61330B145}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8B514AC-1F4C-449A-853D-79A61330B145}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A8B514AC-1F4C-449A-853D-79A61330B145} = {C399D0F3-BAD4-4B56-809C-0196123EAA58}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3F48E29B-2FEA-498C-B3B5-55EAEB6DC49E}
