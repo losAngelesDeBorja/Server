@@ -372,51 +372,140 @@ namespace adm
             Console.Clear();
             Server server = new Server();
             Database dbInit=server.initializeDbEngine();
+            IPAddress localIP = IPAddress.Parse("127.0.0.1"); // Server IP here 127.0.0.1
+            TcpListener listener = new TcpListener(IPAddress.Any, 1111); // Number of PORT 1111 here
+            Console.WriteLine("Server engine inizialized...");
+            Console.WriteLine("Waiting for client communication...");
 
-           while(true)
-           {
-               try
-               {
-                // IP and PORT declarations.
-                IPAddress localIP = IPAddress.Parse("127.0.0.1"); // Server IP here 127.0.0.1
-                TcpListener listener = new TcpListener(IPAddress.Any, 1111); // Number of PORT 1111 here
-                Console.WriteLine("Server engine inizialized...");
-                Console.WriteLine("Waiting for client communication...");   
-                Socket s = listener.AcceptSocket();
-                Console.WriteLine("Conection received from: " + s.RemoteEndPoint);
-                //Save the info received from the client in a variable
-                byte[] b = new byte[100];
-                int k = s.Receive(b);
-                Console.WriteLine("Received");
-                //Print and convert the string's content
-                string chain = "";
-                for (int i = 0; i < k; i++)
+            // Main
+            while (true)
+            {
+                // Starts listener
+                listener.Start();
+                TcpClient client = listener.AcceptTcpClient();
+
+                // Opens network stream
+                NetworkStream netStream = client.GetStream();
+                byte[] buffer = new byte[client.ReceiveBufferSize];
+
+                // Reads buffer and converts to string
+                int bytesRead = netStream.Read(buffer, 0, client.ReceiveBufferSize);
+                string dataRecieved = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+
+                // If the user wants to create a new account, do the next
+                if (dataRecieved.Substring(dataRecieved.Length - 4, 4) == "True")
                 {
-                    chain = chain + Convert.ToChar(b[i]);
+                    Console.WriteLine("\nUser: {0}, tried to make a new account...", dataRecieved.Substring(0, dataRecieved.IndexOf("#.*;#")));
+                    if (MakeNewUser(dataRecieved.Substring(0, dataRecieved.Length - 9)))
+                    { // New user process OK
+                        Console.WriteLine("Success...");
+
+                        buffer = ASCIIEncoding.ASCII.GetBytes("True");
+                        netStream.Write(buffer, 0, buffer.Length);
+                    }
+                    else
+                    { // New user process OK
+                        Console.WriteLine("Failed...");
+
+                        buffer = ASCIIEncoding.ASCII.GetBytes("False");
+                        netStream.Write(buffer, 0, buffer.Length);
+                    }
                 }
-                Console.WriteLine(chain);
-                //Connect with SQL Server
-                string conectSQL = @"Server=.sqlexp;database=Northwnd;" + " Integrated Security=TRUE"; 
-                SqlConnection cm = new SqlConnection();
-                cm.ConnectionString = conectSQL;
-                cm.Open();
-                //Execute the string as SQL command only for Insert, Delete and Update, because it's used ExecuteNonQuery
-                SqlCommand cmd = new SqlCommand(chain, cm);
-                cmd.ExecuteNonQuery();
-                cm.Close();
-                //Send the success sign to Client
-                //This sign can changed depending on the executed process
-                ASCIIEncoding asen = new ASCIIEncoding();
-                s.Send(asen.GetBytes("String received. Command executed"));
-                Console.WriteLine("Enviado");
-                s.Close();
+
+                // Code for user log in
+                if (dataRecieved.Substring(dataRecieved.Length - 5, 5) == "False")
+                {
+                    Console.WriteLine("\nUser: {0}, tried to login...", dataRecieved.Substring(0, dataRecieved.IndexOf("#.*;#")));
+                    if (ValidateUser(dataRecieved.Substring(0, dataRecieved.Length - 10), dbInit))
+                    { // Login ok
+                        Console.WriteLine("Success...");
+
+                        buffer = ASCIIEncoding.ASCII.GetBytes("True");
+                        netStream.Write(buffer, 0, buffer.Length);
+                    }
+                    else
+                    { // Login KO
+                        Console.WriteLine("Failed...");
+
+                        buffer = ASCIIEncoding.ASCII.GetBytes("False");
+                        netStream.Write(buffer, 0, buffer.Length);
+                    }
+                }
+
+                // Code to create new database
+                if (dataRecieved.Substring(dataRecieved.Length - 21, 21) == "createDataBaseExample")
+                {
+                    String[] splitedDataRecieved = new String[3];
+                    string[] separator = new string[] { "#.*;#" };
+                    splitedDataRecieved = dataRecieved.Split(separator, StringSplitOptions.None);
+                    Console.WriteLine("\nAn user tries to make a new database named: " + splitedDataRecieved[0]);
+                    string nameDb = splitedDataRecieved[0];
+                    string userDb = splitedDataRecieved[1];
+
+                    if (MakeNewDataBase(nameDb, userDb, server.dbList))
+                    {
+                        // New database process OK
+                        server.initializeExampleDb();
+                        Console.WriteLine("Success creating new data base...");
+                        buffer = ASCIIEncoding.ASCII.GetBytes("createdDataBase");
+                        netStream.Write(buffer, 0, buffer.Length);
+                    }
+                    else
+                    {
+                        // New user process KO
+                        Console.WriteLine("Failed creating new database...");
+                        buffer = ASCIIEncoding.ASCII.GetBytes("False");
+                        netStream.Write(buffer, 0, buffer.Length);
+                    }
+                }
+
+
+
+                // Code to process the TXT with SQL all databases
+                if (dataRecieved.Substring(dataRecieved.Length - 10, 10) == "processSQL")
+                {
+                    Console.WriteLine("\nAn user tried to process a TXT file with SQLs: " + dataRecieved.Substring(0, dataRecieved.IndexOf("#.*;#")));
+                    if (true)
+                    {
+                        server.processTxtFile();
+                        // show all databases process OK
+                        Console.WriteLine("Success processing TXT file...");
+                        buffer = ASCIIEncoding.ASCII.GetBytes("processSQLOK");
+                        netStream.Write(buffer, 0, buffer.Length);
+                    }
+                    else
+                    {
+                        // New user process KO
+                        Console.WriteLine("Failed getting all database...");
+                        buffer = ASCIIEncoding.ASCII.GetBytes("False");
+                        netStream.Write(buffer, 0, buffer.Length);
+                    }
+                }
+
+                // Code to show all database
+                if (dataRecieved.Substring(dataRecieved.Length - 13, 13) == "showDatabases")
+                {
+                    Console.WriteLine("\nAn user tried to get list of all databases: " + dataRecieved.Substring(0, dataRecieved.IndexOf("#.*;#")));
+                    if (true)
+                    {
+                        // show all databases process OK
+                        Console.WriteLine("Success getting all database...");
+                        buffer = ASCIIEncoding.ASCII.GetBytes("createdDataBase");
+                        netStream.Write(buffer, 0, buffer.Length);
+                    }
+                    else
+                    {
+                        // New user process KO
+                        Console.WriteLine("Failed getting all database...");
+                        buffer = ASCIIEncoding.ASCII.GetBytes("False");
+                        netStream.Write(buffer, 0, buffer.Length);
+                    }
+                }
+                dataRecieved = "";
+                // End of transmission
+                client.Close();
                 listener.Stop();
-               }
-                catch (Exception e)
-               {
-                Console.WriteLine("Error" + e.StackTrace);    
-               }
-           }
+            }
         }
     
     }
