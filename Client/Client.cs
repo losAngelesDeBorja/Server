@@ -12,7 +12,217 @@ namespace adm
 {
     class Client
     {
+       
+        
+        
+        public static void Main(string[] args)
+        {
 
+            //List<string> connection_data = ReadConnection();
+
+            Console.Write("User: ");
+            string user = Console.ReadLine();
+
+
+            /*string password = "";
+            
+            password = GetPassword("Enter password: ");
+            Console.WriteLine();
+            */
+
+            Console.Write("password: ");
+            string password = Console.ReadLine();
+
+
+            Console.Write("DataBase: ");
+            string dataBase = Console.ReadLine();
+
+            string message = string.Format("<Open Database={0} User={1} Password={2}/>",
+                user,
+                password,
+                dataBase);
+
+            Console.Write("\n");
+            Console.Write(message); Console.Write("\n"); Console.Write("\n");
+
+
+            String res = Connect(message);
+
+            if (res.Equals("<Success/>"))
+            {
+                bool continu = true;
+                while (continu)
+                {
+                    Console.Write("Write a query: ");
+                    string query = Console.ReadLine();
+
+                    message = string.Format("<Query>{0}</Query>", query);
+
+                    res = Connect(message);
+
+                    if (res.Equals("<Close/>")) continu = false;
+                }
+
+            }
+
+
+
+            /*List<string> result = new List<string>();
+            string[] separate = connection.Split(',');
+            for (int i = 0; i < separate.Length; i++)
+            {
+                result.Add(separate[i].Trim(' '));
+            }
+            */
+
+
+
+
+
+        }
+
+
+
+        static String Connect(String message)
+        {
+            try
+            {
+                // Create a TcpClient.
+                // Note, for this client to work you need to have a TcpServer
+                // connected to the same address as specified by the server, port
+                // combination.
+                //Int32 port = 13000;
+                TcpClient client = new TcpClient("127.0.0.1", 8001);
+
+                // Translate the passed message into ASCII and store it as a Byte array.
+                Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
+
+                // Get a client stream for reading and writing.
+                //  Stream stream = client.GetStream();
+
+                NetworkStream stream = client.GetStream();
+
+                // Send the message to the connected TcpServer.
+                stream.Write(data, 0, data.Length);
+
+                Console.WriteLine("Sent: {0}", message);
+
+                // Receive the TcpServer.response.
+
+                // Buffer to store the response bytes.
+                data = new Byte[256];
+
+                // String to store the response ASCII representation.
+                String responseData = String.Empty;
+
+                // Read the first batch of the TcpServer response bytes.
+                Int32 bytes = stream.Read(data, 0, data.Length);
+                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                Console.WriteLine("Received: {0}", responseData);
+
+                // Close everything.
+                stream.Close();
+                client.Close();
+                
+                return responseData;
+            }
+            catch (ArgumentNullException e)
+            {
+                Console.WriteLine("ArgumentNullException: {0}", e);
+            }
+            catch (SocketException e)
+            {
+                Console.WriteLine("SocketException: {0}", e);
+            }
+
+            Console.WriteLine("\n Press Enter to continue...");
+            Console.Read();
+
+            return null;
+        
+        }
+
+
+
+        static string GetPassword(string passMsg)
+        {
+            StringBuilder password = new StringBuilder("");
+            bool passwordConfirmed = false;
+            ConsoleKeyInfo curKey;
+            // Hidding charcaters of password in console. Writting "*"  
+            while (!passwordConfirmed)
+            {
+                Console.Write(passMsg);
+                for (int i = 0; i < password.Length; i++) Console.Write("*");
+                curKey = Console.ReadKey(true);
+                if (curKey.Key.ToString() == "Enter")
+                {
+                    if (password.Length < 4 || password.Length > 30)
+                    {
+                        Console.WriteLine("\nPassword must have between 4 and 30 characters long");
+                        continue;
+                    }
+                    passwordConfirmed = true;
+                    continue;
+                }
+                else if (curKey.Key.ToString() == "Backspace" && password.Length > 0)
+                {
+                    password.Remove(password.Length - 1, 1);
+                }
+                else if (curKey.Key.ToString() != "Backspace")
+                {
+                    password.Append(curKey.KeyChar);
+                }
+                Console.Clear();
+            }
+            return password.ToString();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*
         static void Main(string[] args)
         {
             Console.WriteLine("Client Application");
@@ -95,7 +305,7 @@ namespace adm
         }
 
 
-
+        */
 
 
 
