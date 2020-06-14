@@ -170,7 +170,9 @@ namespace adm
             // When successful login retrieves true
             return true;
         }
+       
         static bool CreateNewDatabase(string dbInfo) { return false; }
+        
         static bool DeleteNewDatabase(string dbInfo) { return false; }
 
         public Database initializeDbEngine() {
@@ -254,6 +256,7 @@ namespace adm
 
             return accessDB;
         }
+        
         public void initializeExampleDb()
         {
             //SOME FAKE DATA INIT
@@ -369,6 +372,8 @@ namespace adm
 
 
         }
+        
+        
         private static void Main()
         {
             Console.Clear();
