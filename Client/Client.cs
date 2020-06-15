@@ -79,7 +79,7 @@ namespace adm
             Console.WriteLine("\n Press Enter to continue...");
             Console.Read();
 
-            return null;
+            return "Error";
 
         }
 
@@ -275,10 +275,7 @@ namespace adm
             */
 
 
-            string message = string.Format("<Open Database={0} User={1} Password={2}/>",
-                username,
-                password,
-                null);
+            string message = string.Format("<Open Database={0} User={1} Password={2}/>",username, password, null);
 
             String res = Connect(message);
 
