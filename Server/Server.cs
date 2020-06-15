@@ -394,7 +394,7 @@ namespace adm
                 // Buffer for reading data
                 Byte[] bytes = new Byte[256];
                 String data = "";
-                String response = "";
+                
 
                 // Enter the listening loop.
                 while (true)
@@ -417,18 +417,18 @@ namespace adm
                     while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
                     {
                         // Translate data bytes to a ASCII string.
-                        data = Encoding.ASCII.GetString(bytes, 0, i);
+                        data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
                         Console.WriteLine("Received: {0}", data);
 
                         // Process the data sent by the client.
                         data = data.ToUpper();
 
 
-                        byte[] msg = Encoding.ASCII.GetBytes(response);
+                        byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
 
                         // Send back a response.
                         stream.Write(msg, 0, msg.Length);
-                        Console.WriteLine("Sent: {0}", response);
+                        Console.WriteLine("Sent: {0}", data);
                     }
                     // Shutdown and end connection
                     client.Close();
