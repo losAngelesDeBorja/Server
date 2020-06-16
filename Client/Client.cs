@@ -1,18 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Net;
 using System.Net.Sockets;
-using System.IO;
-using System.Xml.Linq;
 
 namespace adm
 {
     class Client
     {
-
         public const string Error = "ERROR: ";
         public const string SecurityIncorrectLogin = Error + "Incorrect login";
         public const string SecurityNotSufficientPrivileges = Error + "Not sufficient privileges";
@@ -21,67 +14,6 @@ namespace adm
         public const string SecurityProfileDoesNotExist = Error + "Security profile does not exist";
         public const string SecurityUserDoesNotExist = Error + "Security user does not exist";
         public static string userDB = "";
-
-
-        //send a string to Server and return a confirm
-        static String Connect(String message)
-        {
-            try
-            {
-                // Create a TcpClient.
-                // Note, for this client to work you need to have a TcpServer
-                // connected to the same address as specified by the server, port
-                // combination.
-                //Int32 port = 13000;
-                TcpClient client = new TcpClient("127.0.0.1", 8001);
-
-                // Translate the passed message into ASCII and store it as a Byte array.
-                Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
-
-                // Get a client stream for reading and writing.
-                //  Stream stream = client.GetStream();
-
-                NetworkStream stream = client.GetStream();
-
-                // Send the message to the connected TcpServer.
-                stream.Write(data, 0, data.Length);
-
-                Console.WriteLine("Sent: {0}", message);
-
-                // Receive the TcpServer.response.
-
-                // Buffer to store the response bytes.
-                data = new Byte[256];
-
-                // String to store the response ASCII representation.
-                String responseData = String.Empty;
-
-                // Read the first batch of the TcpServer response bytes.
-                Int32 bytes = stream.Read(data, 0, data.Length);
-                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                Console.WriteLine("Received: {0}", responseData);
-
-                // Close everything.
-                stream.Close();
-                client.Close();
-
-                return responseData;
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine("ArgumentNullException: {0}", e);
-            }
-            catch (SocketException e)
-            {
-                Console.WriteLine("SocketException: {0}", e);
-            }
-
-            Console.WriteLine("\n Press Enter to continue...");
-            Console.Read();
-
-            return "Error";
-
-        }
 
         static string GetPassword(string passMsg)
         {
@@ -154,8 +86,6 @@ namespace adm
             }
             // Once user and password introduced, send them to server to try the login
             Console.WriteLine("\nLogin inputs successful... Sending credentials to server...");
-
-
             return SendLoginInfo(username, password, newUser);
         }
 
@@ -175,8 +105,6 @@ namespace adm
             return SendNewDataBaseInfo(databaseName, task);
         }
 
-        
-        
         // SQL processing 
         static bool sqlProcessing(string task)
         {
@@ -192,7 +120,6 @@ namespace adm
             Console.WriteLine("\nSending request to server...");
             return SendNewDataBaseInfo(databaseName, task);
         }
-
 
         // Send DB name to server
         static bool SendNewDataBaseInfo(string databasename, string task)
@@ -240,9 +167,8 @@ namespace adm
         // Send login credential to server
         static bool SendLoginInfo(string username, string password, bool newUser)
         {
-
-            /*
             TcpClient client;
+
             // Try connection with server
             try
             {
@@ -272,19 +198,8 @@ namespace adm
                 userDB = username;
                 return true;
             }
-            */
-
-
-            string message = string.Format("<Open Database={0} User={1} Password={2}/>",username, password, null);
-
-            String res = Connect(message);
-
-
             return false;
-
-
         }
-
 
         static void Main(string[] args)
         {
@@ -293,11 +208,9 @@ namespace adm
             Console.WriteLine("");
             bool notValid = true;
             bool notValidDB = true;
-            bool notEnded = true;
-
             char answer;
             char answerDB;
-
+            bool notEnded = true;
 
             while (notEnded)
             {
@@ -436,5 +349,9 @@ namespace adm
         }
 
 
+
+
+
     }
 }
+

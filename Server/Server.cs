@@ -9,9 +9,6 @@ using System.Data;
 using System.Threading.Tasks;
 using System.Diagnostics;
 
-using System.Text.RegularExpressions;
-
-
 namespace adm
 {
     class Server
@@ -22,12 +19,10 @@ namespace adm
         public List<Database> dbList;
         public Table tableAcesss;
         public Table newTable;
-        public Server() {
+        public Server()
+        {
             dbList = new List<Database>();
         }
-
-        
-        
 
         // Create a new user
         static bool MakeNewUser(string userInfo)
@@ -55,8 +50,8 @@ namespace adm
         static bool MakeNewDataBase(string dbInfo, string dbUser, List<Database> l)
         {
             bool uniqueDataBasename = true;
-            Console.WriteLine("dbInfo: "+ dbInfo);
-            Console.WriteLine("dbUser: "+ dbUser);
+            Console.WriteLine("dbInfo: " + dbInfo);
+            Console.WriteLine("dbUser: " + dbUser);
 
             foreach (Database d in l)
             {
@@ -67,14 +62,14 @@ namespace adm
             }
 
             // Check if the DB does not exists
-           
+
             // When db name exists, returns false
             if (!uniqueDataBasename)
             {
                 return false;
             }
             // If it's true and does not exists, add db
-            
+
             return true;
         }
 
@@ -99,12 +94,14 @@ namespace adm
             File.AppendAllText("name_database.txt", dbInfo + "\n");
             return true;
         }
+        
         //Show all databases
         string showAllDatabases()
         {
             Console.WriteLine("showAllDatabases method ");
             String databaseListNames = "#.*;#";
-            if (dbList.Count>0) {
+            if (dbList.Count > 0)
+            {
                 foreach (Database db in dbList)
                 {
                     databaseListNames = databaseListNames + db.dbName + "#.*;#";
@@ -140,7 +137,7 @@ namespace adm
             }
             if (accessGranted == false)
             {
-                Console.WriteLine("Access denied. The user"+ nameUser + " or password "+ passPass + " are incorrect. Please try again");
+                Console.WriteLine("Access denied. The user" + nameUser + " or password " + passPass + " are incorrect. Please try again");
             }
             // When returns false, user/password were incorrect
             if (!accessGranted)
@@ -173,12 +170,11 @@ namespace adm
             // When successful login retrieves true
             return true;
         }
-       
         static bool CreateNewDatabase(string dbInfo) { return false; }
-        
         static bool DeleteNewDatabase(string dbInfo) { return false; }
 
-        public Database initializeDbEngine() {
+        public Database initializeDbEngine()
+        {
 
             Console.WriteLine("Starting...");
 
@@ -201,7 +197,7 @@ namespace adm
             tableAcesss.addField("USER", DataType.STRING);
             tableAcesss.addField("PASS", DataType.INT);
             tableAcesss.addField("PRIVILEDGE", DataType.STRING);
-            
+
             //Insert tuples
             List<string> insertTupleList = new List<string>();
             insertTupleList.Add("1");
@@ -209,16 +205,16 @@ namespace adm
             insertTupleList.Add("admin");
             insertTupleList.Add("1");
             tableAcesss.addTupleToTable(insertTupleList);
-            
+
             //Add first Table to first DataBase
-            accessDB.addTable(tableAcesss,"ACCESS");
+            accessDB.addTable(tableAcesss, "ACCESS");
 
             //Security
             Security security = new Security();
 
             //Create security profile
             security.createSecurityProfile("admin");
-            
+
             //Add user to security profile
             security.addUser(dbNameUser, dbPassUser, "admin");
 
@@ -237,14 +233,14 @@ namespace adm
                 //Request password
                 Console.WriteLine("Password:");
                 passwordLogin = Security.GetHiddenConsoleInput();
-                
+
 
                 //Getting the Table of Users. In order to protect from SQL Injection the process of search USER NAME is here instead using WHERE clause
-                Table result=accessDB.executeSQLByCommandReturnResult("SELECT USER,PASS FROM ACCESS", tableAcesss);
+                Table result = accessDB.executeSQLByCommandReturnResult("SELECT USER,PASS FROM ACCESS", tableAcesss);
 
-                for(int i=0; i< result.dataTableStorage.Rows.Count;i++)
+                for (int i = 0; i < result.dataTableStorage.Rows.Count; i++)
                 {
-                    if ((result.dataTableStorage.Rows[i]["USER"].ToString() == userLogin)&&(result.dataTableStorage.Rows[i]["PASS"].ToString()== passwordLogin))
+                    if ((result.dataTableStorage.Rows[i]["USER"].ToString() == userLogin) && (result.dataTableStorage.Rows[i]["PASS"].ToString() == passwordLogin))
                     {
                         accessGranted = true;
                         Console.WriteLine("Access granted");
@@ -259,7 +255,6 @@ namespace adm
 
             return accessDB;
         }
-        
         public void initializeExampleDb()
         {
             //SOME FAKE DATA INIT
@@ -309,7 +304,7 @@ namespace adm
             //SOME FAKE DATA END
 
 
-            
+
         }
 
         public void processTxtFile()
@@ -375,87 +370,11 @@ namespace adm
 
 
         }
-        
-        
-
         private static void Main()
         {
-            TcpListener server = null;
-            try
-            {
-
-                IPAddress localAddr = IPAddress.Parse("127.0.0.1");
-                // Set the TcpListener on port 8001.
-                server = new TcpListener(localAddr, 8001);
-
-
-                server.Start();
-
-                // Buffer for reading data
-                Byte[] bytes = new Byte[256];
-                String data = "";
-                
-
-                // Enter the listening loop.
-                while (true)
-                {
-                    Console.Write("Waiting for a connection... ");
-
-                    // Perform a blocking call to accept requests.
-                    // You could also use server.AcceptSocket() here.
-                    TcpClient client = server.AcceptTcpClient();
-                    Console.WriteLine("Connected");
-
-                    data = null;
-
-                    // Get a stream object for reading and writing
-                    NetworkStream stream = client.GetStream();
-
-                    int i;
-                    
-                    // Loop to receive all the data sent by the client.
-                    while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
-                    {
-                        // Translate data bytes to a ASCII string.
-                        data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-                        Console.WriteLine("Received: {0}", data);
-
-                        // Process the data sent by the client.
-                        data = data.ToUpper();
-
-
-                        byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
-
-                        // Send back a response.
-                        stream.Write(msg, 0, msg.Length);
-                        Console.WriteLine("Sent: {0}", data);
-                    }
-                    // Shutdown and end connection
-                    client.Close();
-                }
-            }
-            catch (SocketException e)
-            {
-                Console.WriteLine("SocketException: {0}", e);
-            }
-            finally
-            {
-                // Stop listening for new clients.
-                server.Stop();
-            }
-
-            Console.WriteLine("\nHit enter to continue...");
-            Console.Read();
-
-
-
-            /*
-                        
-                    
-            
             Console.Clear();
             Server server = new Server();
-            Database dbInit=server.initializeDbEngine();
+            Database dbInit = server.initializeDbEngine();
 
             // IP and PORT declarations.
             IPAddress localIP = IPAddress.Parse("127.0.0.1"); // Server IP here 127.0.0.1
@@ -524,28 +443,28 @@ namespace adm
                     String[] splitedDataRecieved = new String[3];
                     string[] separator = new string[] { "#.*;#" };
                     splitedDataRecieved = dataRecieved.Split(separator, StringSplitOptions.None);
-                    Console.WriteLine("\nAn user tries to make a new database named: "+ splitedDataRecieved[0]);
+                    Console.WriteLine("\nAn user tries to make a new database named: " + splitedDataRecieved[0]);
                     string nameDb = splitedDataRecieved[0];
                     string userDb = splitedDataRecieved[1];
-                  
-                    if (MakeNewDataBase(nameDb, userDb,server.dbList))
-                    { 
+
+                    if (MakeNewDataBase(nameDb, userDb, server.dbList))
+                    {
                         // New database process OK
                         server.initializeExampleDb();
                         Console.WriteLine("Success creating new data base...");
-                        buffer = ASCIIEncoding.ASCII.GetBytes("createdDataBase");   
+                        buffer = ASCIIEncoding.ASCII.GetBytes("createdDataBase");
                         netStream.Write(buffer, 0, buffer.Length);
                     }
                     else
-                    { 
+                    {
                         // New user process KO
                         Console.WriteLine("Failed creating new database...");
                         buffer = ASCIIEncoding.ASCII.GetBytes("False");
                         netStream.Write(buffer, 0, buffer.Length);
                     }
-                 }
+                }
 
-                
+
 
                 // Code to process the TXT with SQL all databases
                 if (dataRecieved.Substring(dataRecieved.Length - 10, 10) == "processSQL")
@@ -592,15 +511,7 @@ namespace adm
                 client.Close();
                 listener.Stop();
             }
-        
-            */
-
         }
-
-
-
-
-
 
     }
 }
